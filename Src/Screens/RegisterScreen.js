@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,KeyboardAvoidingView} from 'react-native';
+import {StyleSheet,Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
@@ -11,7 +11,6 @@ import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
 import { CustomPicker } from 'react-native-custom-picker'
 import {strings} from '../Values/Strings'
-import { ScrollView } from 'react-native-gesture-handler';
 
 
 const itemUser =[
@@ -57,29 +56,16 @@ export default class RegisterScreen extends Component {
 
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
-        <ScrollView>
-          <View style={{padding:30}}>
-                  <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                          <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
-                  </Display>
-                  <View style={{flex:.3,justifyContent:'center',alignItems:'center',marginBottom:30}}>
-                      <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
-                  </View>
-                  <View style={{marginTop:5}}>
-                                    <Text style={{color:'#000',marginBottom:5}}>{strings.UserType}</Text>
-                                    <CustomPicker
-                                      defaultValue={itemUser[0]}
-                                      options={itemUser}
-                                      getLabel={item => item.label}
-                                      fieldTemplate={this.renderFieldUser}
-                                      optionTemplate={this.renderOption}
-                                      onValueChange={value => {
-                                        this.DisplayViews(value.value)
-                                      }}
-                                    />
-                  </View>
-                  
-                  <View style={{marginVertical:10}}>
+      <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
+      <ScrollView>
+        <View style={{padding:30}}>
+                <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                        <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
+                </Display>
+                <View style={{flex:.3,justifyContent:'center',alignItems:'center',marginBottom:30}}>
+                    <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
+                </View>
+                <View style={{marginVertical:10}}>
                           <Fumi
                             label={strings.InstitutionalMail}
                             labelStyle={{color:'#fff'}}
@@ -120,10 +106,6 @@ export default class RegisterScreen extends Component {
                   </View>
 
 
-                  <Display enable={this.state.enableDriverText}enterDuration={500} 
-                                          exitDuration={250}
-                                          exit="fadeOutLeft"
-                                          enter="fadeInLeft">
                   <View style={{marginVertical:10}}>
                           <Fumi
                             label={strings.Car}
@@ -176,7 +158,6 @@ export default class RegisterScreen extends Component {
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
                           />
                   </View>
-                  </Display>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
                                     title={strings.Register}
@@ -191,48 +172,12 @@ export default class RegisterScreen extends Component {
                                     onPress={() => this.props.navigation.navigate('App')}
                                 />
                   </View>
-                  
-          </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
+      </ImageBackground>
+    </View>
       )
   }
-  renderFieldUser(settings) {
-    const { selectedItem, defaultText, getLabel, clear } = settings
-    return (
-      <View style={styles.container_type_user}>
-        <View>
-          {!selectedItem && <Text style={{color:'#000'}}>{defaultText}</Text>}
-          {selectedItem && (
-            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-              <View style={{flexDirection:'row'}}>
-                <View style={{marginLeft:5}}>
-                  <Text style={{color:'white'}}>
-                    {getLabel(selectedItem)}
-                  </Text>
-                </View>
-              </View>
-              <View>
-                  <Icon2 size={25} color='#fff' name='keyboard-arrow-down'/>
-              </View>
-                
-            </View>
-          )}
-        </View>
-      </View>
-    )
-  }
-  renderOption(settings) {
-    const { item, getLabel } = settings
-    return (
-      <View style={{backgroundColor:'rgba(51, 52, 52, 0.99)'}}>
-        <View style={{padding:10}}>
-          <Text style={{ color: '#fff', alignSelf: 'flex-start'}}>{getLabel(item)}</Text>
-        </View>
-      </View>
-    )
-  }
-
 }
 
 const styles = StyleSheet.create({

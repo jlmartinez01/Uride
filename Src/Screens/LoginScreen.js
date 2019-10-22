@@ -23,6 +23,7 @@ export default class LoginScreen extends Component {
 
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
+        <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
         <ScrollView>
           <View style={{padding:30}}>
                   <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
@@ -73,6 +74,7 @@ export default class LoginScreen extends Component {
                   </View>
           </View>
         </ScrollView>
+        </ImageBackground>
       </View>
       )
   }
