@@ -9,13 +9,19 @@ export let strings = new LocalizedStrings({
         InstitutionalMail:'Institutional mail',
         Password:'Password',
         Name:'Name',
+        LastName:'Last Name',
         Car:'Car',
         CarColor:'Car color',
         DepartureTime:'Departure time',
         NumberSeats:'Number of seats',
         Passenger:'Passenger',
         Driver:'Driver',
-        UserType:'User type'
+        UserType:'User type',
+        NoRides:'No rides available',
+        Destination:'Destination',
+        Logout:'Log out',
+        Help:'Help',
+        EditInformation:'Edit information'
 
     },
     es:{
@@ -25,13 +31,19 @@ export let strings = new LocalizedStrings({
         InstitutionalMail:'Correo institucional',
         Password:'Contraseña',
         Name:'Nombre',
+        LastName:'Apellidos',
         Car:'Automóvil',
         CarColor:'Color de automóvil',
         DepartureTime:'Hora de salida',
         NumberSeats:'Número de asientos',
         Passenger:'Pasajero',
         Driver:'Conductor',
-        UserType:'Tipo de usuario'
+        UserType:'Tipo de usuario',
+        NoRides:'No existen rides disponibles',
+        Destination:'Destino',
+        Logout:'Cerrar sesión',
+        Help:'Ayuda',
+        EditInformation:'Editar información'
 
 
 

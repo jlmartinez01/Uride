@@ -66,6 +66,19 @@ export default class RegisterScreen extends Component {
                     <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
                 </View>
                 <View style={{marginVertical:10}}>
+                                    <Text style={{color:'gray'}}>{strings.Profile_type}</Text>
+                                    <CustomPicker
+                                      defaultValue={itemUser[0]}
+                                      options={itemUser}
+                                      getLabel={item => item.label}
+                                      fieldTemplate={this.renderFieldUser}
+                                      optionTemplate={this.renderOption}
+                                      onValueChange={value => {
+                                        this.DisplayViews(value.value)
+                                      }}
+                                    />
+                      </View>
+                <View style={{marginVertical:10}}>
                           <Fumi
                             label={strings.InstitutionalMail}
                             labelStyle={{color:'#fff'}}
@@ -104,8 +117,21 @@ export default class RegisterScreen extends Component {
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
                           />
                   </View>
+                  <View style={{marginVertical:10}}>
+                          <Fumi
+                            label={strings.LastName}
+                            labelStyle={{color:'#fff'}}
+                            iconClass={FontAwesomeIcon}
+                            iconName={'user'}
+                            iconColor={'#fff'}
+                            iconSize={20}
+                            iconWidth={40}
+                            inputPadding={16}
+                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                          />
+                  </View>
 
-
+                  <Display enable={this.state.enableDriverText}>
                   <View style={{marginVertical:10}}>
                           <Fumi
                             label={strings.Car}
@@ -158,6 +184,7 @@ export default class RegisterScreen extends Component {
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
                           />
                   </View>
+                  </Display>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
                                     title={strings.Register}
@@ -178,18 +205,62 @@ export default class RegisterScreen extends Component {
     </View>
       )
   }
+
+
+  renderFieldUser(settings) {
+    const { selectedItem, defaultText, getLabel, clear } = settings
+    return (
+      <View style={styles.container_type_user}>
+        <View>
+          {!selectedItem && <Text style={[styles.text, { color: 'grey' }]}>{defaultText}</Text>}
+          {selectedItem && (
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              <View style={{flexDirection:'row'}}>
+                <View style={{marginLeft:5}}>
+                  <Text style={{color:'white',}}>
+                    {getLabel(selectedItem)}
+                  </Text>
+                </View>
+              </View>
+              <View>
+                  <Icon2 size={25} color='white' name='keyboard-arrow-down'/>
+              </View>
+                
+            </View>
+          )}
+        </View>
+      </View>
+    )
+  }
+
+  renderOption(settings) {
+    const { item, getLabel } = settings
+    return (
+      <View style={{
+        backgroundColor:'rgba(51, 52, 52, 0.99)',
+        padding:10,borderWidth:1,
+        borderBottomColor:'white',
+        borderLeftColor:'transparent',
+        borderRightColor:'transparent',
+        borderTopColor:'transparent',}}>
+        <View style={{padding:10}}>
+          <Text style={{ color: '#fff', alignSelf: 'flex-start',}}>{getLabel(item)}</Text>
+        </View>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
   container_type_user: {
     flex: 1,
     borderWidth:1,
-    paddingVertical:6,
     borderLeftColor:'transparent',
     borderRightColor:'transparent',
     borderTopColor:'transparent',
     borderBottomColor:'white',
     justifyContent:'flex-start',
+    padding:15,
     backgroundColor:'rgba(52, 52, 52, .9)'
   },
   container: {
