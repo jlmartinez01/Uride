@@ -6,7 +6,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
-import {strings} from '../Values/Strings'
 import RideBox from '../Components/RideBox'
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 
@@ -107,7 +106,7 @@ export default class HomeScreen extends Component {
               ListEmptyComponent={() => {
                 return (
                     <View style={{justifyContent:'center',alignItems:'center',alignContent:'center',marginVertical:10,height:300}}>
-                        <Text>... {strings.NoRides} ...</Text>
+                        <Text>... {'No existen rides disponibles'} ...</Text>
                     </View>
                 )
               }}

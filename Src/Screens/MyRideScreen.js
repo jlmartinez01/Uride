@@ -6,7 +6,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
-import {strings} from '../Values/Strings'
 import RideBox from '../Components/RideBox'
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 

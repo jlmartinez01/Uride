@@ -6,7 +6,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
-import {strings} from '../Values/Strings'
 
 
 
@@ -34,7 +33,7 @@ export default class LoginScreen extends Component {
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.InstitutionalMail}
+                            label={'Correo institucional'}
                             labelStyle={{color:'#fff'}}
                             iconClass={FontAwesomeIcon}
                             iconName={'university'}
@@ -47,7 +46,7 @@ export default class LoginScreen extends Component {
                   </View>
                    <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.Password}
+                            label={'Contraseña'}
                             labelStyle={{color:'#fff'}}
                             iconClass={MaterialCommunityIcons}
                             iconName={'security'}
@@ -60,7 +59,7 @@ export default class LoginScreen extends Component {
                   </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
                                 <Button
-                                    title={strings.Login}
+                                    title={'Iniciar sesión'}
                                     rounded
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{

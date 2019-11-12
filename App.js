@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {TouchableOpacity,View,Text,SafeAreaView,Image} from 'react-native';
-import {strings} from './Src/Values/Strings'
 import PresentationScreen from './Src/Screens/PresentationScreen';
 import RegisterScreen from './Src/Screens/RegisterScreen';
 import LoginScreen from './Src/Screens/LoginScreen';
@@ -23,7 +22,7 @@ const AuthStackNavigator = createStackNavigator({
   },
   Register:{screen:RegisterScreen,
     navigationOptions:{
-      title: strings.GoBack,
+      title: 'Volver',
       headerStyle: {
         backgroundColor: 'black',
       },
@@ -32,7 +31,7 @@ const AuthStackNavigator = createStackNavigator({
     },
   Login:{screen:LoginScreen,
     navigationOptions:{
-      title: strings.GoBack,
+      title: 'Volver',
       headerStyle: {
         backgroundColor: 'black',
       },
@@ -177,14 +176,14 @@ const AppDrawerNavigator = createDrawerNavigator({
   contentComponent: ({ navigation }) => (
     <SafeAreaView>
       <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{strings.EditInformation}</Text>
+        <Text style={{color:'black'}}>{'Editar información'}</Text>
       </View>
       <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{strings.Help}</Text>
+        <Text style={{color:'black'}}>{'Ayuda'}</Text>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('Presentation')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{strings.Logout}</Text>
+        <Text style={{color:'black'}}>{'Cerrar sesión'}</Text>
       </View>
       </TouchableOpacity>
     </SafeAreaView>

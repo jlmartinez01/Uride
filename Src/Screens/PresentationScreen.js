@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View,TextInput,Image,ImageBackground,Dimensions,AsyncStorage} from 'react-native';
 import { Button } from 'react-native-elements';
-import {strings} from '../Values/Strings'
-
 
 
 export default class PresentationScreen extends Component {
@@ -26,7 +24,7 @@ export default class PresentationScreen extends Component {
                   <View style={{flex:.3,alignItems:'center',justifyContent:'center',}}>
                         <View style={{margin:5,flex:1,flexDirection:'row'}}>
                         <Button
-                              title={strings.Register}
+                              title={'Registrarse'}
                               rounded
                               titleStyle={{fontSize:14,color:'#fff'}}
                               buttonStyle={{
@@ -40,7 +38,7 @@ export default class PresentationScreen extends Component {
                         </View>
                         <View style={{margin:5,flex:1,flexDirection:'row'}}>
                             <Button
-                                  title={strings.Login}
+                                  title={'Iniciar sesión'}
                                   rounded
                                   titleStyle={{fontSize:14,color:'#fff'}}
                                   buttonStyle={{

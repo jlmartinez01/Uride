@@ -10,12 +10,11 @@ import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
 import { CustomPicker } from 'react-native-custom-picker'
-import {strings} from '../Values/Strings'
 
 
 const itemUser =[
-  {label: strings.Passenger, value: 'pasajero'},
-  {label: strings.Driver, value: 'conductor'},
+  {label: 'Pasajero', value: 'pasajero'},
+  {label: 'Conductor', value: 'conductor'},
 ]
 
 
@@ -66,7 +65,7 @@ export default class RegisterScreen extends Component {
                     <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
                 </View>
                 <View style={{marginVertical:10}}>
-                                    <Text style={{color:'gray'}}>{strings.Profile_type}</Text>
+                                    <Text style={{color:'gray'}}>Tipo de usuario</Text>
                                     <CustomPicker
                                       defaultValue={itemUser[0]}
                                       options={itemUser}
@@ -80,7 +79,7 @@ export default class RegisterScreen extends Component {
                       </View>
                 <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.InstitutionalMail}
+                            label={'Correo institucional'}
                             labelStyle={{color:'#fff'}}
                             iconClass={FontAwesomeIcon}
                             iconName={'university'}
@@ -93,7 +92,7 @@ export default class RegisterScreen extends Component {
                   </View>
                    <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.Password}
+                            label={'Contraseña'}
                             labelStyle={{color:'#fff'}}
                             iconClass={MaterialCommunityIcons}
                             iconName={'security'}
@@ -106,7 +105,7 @@ export default class RegisterScreen extends Component {
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.Name}
+                            label={'Nombre'}
                             labelStyle={{color:'#fff'}}
                             iconClass={FontAwesomeIcon}
                             iconName={'user'}
@@ -119,7 +118,7 @@ export default class RegisterScreen extends Component {
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.LastName}
+                            label={'Apellidos'}
                             labelStyle={{color:'#fff'}}
                             iconClass={FontAwesomeIcon}
                             iconName={'user'}
@@ -134,7 +133,7 @@ export default class RegisterScreen extends Component {
                   <Display enable={this.state.enableDriverText}>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.Car}
+                            label={'Automóvil'}
                             labelStyle={{color:'#fff'}}
                             iconClass={MaterialCommunityIcons}
                             iconName={'car'}
@@ -147,7 +146,7 @@ export default class RegisterScreen extends Component {
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.CarColor}
+                            label={'Color de automóvil'}
                             labelStyle={{color:'#fff'}}
                             iconClass={MaterialIcons}
                             iconName={'color-lens'}
@@ -160,7 +159,7 @@ export default class RegisterScreen extends Component {
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.DepartureTime}
+                            label={'Hora de salida'}
                             labelStyle={{color:'#fff'}}
                             iconClass={MaterialCommunityIcons}
                             iconName={'clock'}
@@ -173,7 +172,7 @@ export default class RegisterScreen extends Component {
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
-                            label={strings.NumberSeats}
+                            label={'Número de asientos'}
                             labelStyle={{color:'#fff'}}
                             iconClass={MaterialCommunityIcons}
                             iconName={'seat-recline-extra'}
@@ -187,7 +186,7 @@ export default class RegisterScreen extends Component {
                   </Display>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
-                                    title={strings.Register}
+                                    title={'Registrarse'}
                                     rounded
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{

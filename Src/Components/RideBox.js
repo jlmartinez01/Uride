@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { Text, View, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons'
 import { withNavigationFocus } from 'react-navigation';
-import { strings } from '../Values/Strings';
 import { Button } from 'react-native-elements';
 
 class RideBox extends Component{
@@ -44,10 +43,10 @@ class RideBox extends Component{
                             </View>
                         </View>
                         <View style={{paddingTop:5}}>
-                            <Text style={{color:'white'}}>{strings.Destination+" - "+this.state.usu_destino}</Text>
+                            <Text style={{color:'white'}}>{'Destino'+" - "+this.state.usu_destino}</Text>
                         </View>
                         <View style={{paddingTop:5}}>
-                            <Text style={{color:'white'}}>{strings.DepartureTime+" - "+this.state.usu_hora}</Text>
+                            <Text style={{color:'white'}}>{'Hora de salida'+" - "+this.state.usu_hora}</Text>
                         </View>
                     </View>
                 </View>
