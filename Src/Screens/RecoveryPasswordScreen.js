@@ -9,7 +9,7 @@ import Display from 'react-native-display';
 
 
 
-export default class LoginScreen extends Component {
+export default class RecoveryPasswordScreen extends Component {
 
   constructor(){
     super();
@@ -44,22 +44,9 @@ export default class LoginScreen extends Component {
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
                           />
                   </View>
-                   <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Contraseña'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={MaterialCommunityIcons}
-                            iconName={'security'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                          />
-                  </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
                                 <Button
-                                    title={'Iniciar sesión'}
+                                    title={'Enviar Link'}
                                     rounded
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{
@@ -69,20 +56,6 @@ export default class LoginScreen extends Component {
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
                                     onPress={() => this.props.navigation.navigate('App')}
-                                />
-                  </View>
-                  <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
-                                <Button
-                                    title={'Olvidaste tu Contraseña?'}
-                                    rounded
-                                    titleStyle={{fontSize:14,color:'#fff'}}
-                                    buttonStyle={{
-                                        borderRadius: 10,
-                                        backgroundColor:'#1985DF'
-                                        
-                                    }}
-                                    containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                                    onPress={() => this.props.navigation.navigate('Recovery')}
                                 />
                   </View>
           </View>

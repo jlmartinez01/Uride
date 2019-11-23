@@ -5,6 +5,7 @@ import RegisterScreen from './Src/Screens/RegisterScreen';
 import LoginScreen from './Src/Screens/LoginScreen';
 import Home from './Src/Screens/HomeScreen';
 import MyRide from './Src/Screens/MyRideScreen';
+import RecoveryScreen from './Src/Screens/RecoveryPasswordScreen';
 import {createSwitchNavigator,createAppContainer,createTopTabNavigator} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -30,6 +31,15 @@ const AuthStackNavigator = createStackNavigator({
       },
     },
   Login:{screen:LoginScreen,
+    navigationOptions:{
+      title: 'Volver',
+      headerStyle: {
+        backgroundColor: 'black',
+      },
+      headerTintColor: '#fff',
+      },
+    },
+  Recovery:{screen:RecoveryScreen,
     navigationOptions:{
       title: 'Volver',
       headerStyle: {
