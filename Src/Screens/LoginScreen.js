@@ -55,6 +55,7 @@ export default class LoginScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            secureTextEntry={true}
                           />
                   </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>

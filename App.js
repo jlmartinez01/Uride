@@ -6,6 +6,7 @@ import LoginScreen from './Src/Screens/LoginScreen';
 import Home from './Src/Screens/HomeScreen';
 import MyRide from './Src/Screens/MyRideScreen';
 import RecoveryScreen from './Src/Screens/RecoveryPasswordScreen';
+import Help from './Src/Screens/HelpScreen';
 import {createSwitchNavigator,createAppContainer,createTopTabNavigator} from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -55,10 +56,30 @@ const AuthStackNavigator = createStackNavigator({
     screen: Home,
     navigationOptions: ({ navigation }) => ({
       header: (
-        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 80, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
           <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.toggleDrawer()}>
-            <View style={{padding:10}}>
-              <Icon name='menu' size={22} color='white'  />
+            <View style={{paddingTop:30}}>
+              <Icon name='menu' size={30} color='white'  />
+            </View>
+          </TouchableOpacity>
+          <View style={{ flex: .75, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+
+          </View>
+          <View style={{ flex: .1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
+
+          </View>
+        </SafeAreaView>
+      ),
+    })
+  },
+  Ayuda: {
+    screen: Help,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 80, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+          <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.toggleDrawer()}>
+            <View style={{paddingTop:30}}>
+              <Icon name='menu' size={30} color='white'  />
             </View>
           </TouchableOpacity>
           <View style={{ flex: .75, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
@@ -79,10 +100,10 @@ const MyRideStack = createStackNavigator({
     screen: MyRide,
     navigationOptions: ({ navigation }) => ({
       header: (
-        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 80, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
           <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.toggleDrawer()}>
-            <View style={{padding:10}}>
-              <Icon name='menu' size={22} color='white'  />
+            <View style={{paddingTop:30}}>
+              <Icon name='menu' size={30} color='white'  />
             </View>
           </TouchableOpacity>
           <View style={{ flex: .75, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
@@ -185,12 +206,14 @@ const AppDrawerNavigator = createDrawerNavigator({
   drawerBackgroundColor: 'white',
   contentComponent: ({ navigation }) => (
     <SafeAreaView>
-      <View style={{justifyContent:'flex-end',padding:15}}>
+      <View style={{justifyContent:'flex-end',padding:15,paddingTop:50}}>
         <Text style={{color:'black'}}>{'Editar información'}</Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate('Ayuda')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
         <Text style={{color:'black'}}>{'Ayuda'}</Text>
       </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Presentation')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
         <Text style={{color:'black'}}>{'Cerrar sesión'}</Text>
