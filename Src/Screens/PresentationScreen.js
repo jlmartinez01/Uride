@@ -29,7 +29,7 @@ export default class PresentationScreen extends Component {
                               titleStyle={{fontSize:14,color:'#fff'}}
                               buttonStyle={{
                                   borderRadius: 10,
-                                  backgroundColor:'rgba(52, 52, 52, .9)' 
+                                  backgroundColor:'#F64648' 
                                   
                               }}
                               containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
@@ -43,7 +43,7 @@ export default class PresentationScreen extends Component {
                                   titleStyle={{fontSize:14,color:'#fff'}}
                                   buttonStyle={{
                                     borderRadius: 10,
-                                    backgroundColor:'rgba(52, 52, 52, .9)' 
+                                    backgroundColor:'#F64648'
                                       
                                   }}
                                   containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}

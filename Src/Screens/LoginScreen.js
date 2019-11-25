@@ -64,7 +64,7 @@ export default class LoginScreen extends Component {
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{
                                         borderRadius: 10,
-                                        backgroundColor:'#1985DF'
+                                        backgroundColor:'#F64648'
                                         
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}

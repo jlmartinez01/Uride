@@ -191,7 +191,7 @@ export default class RegisterScreen extends Component {
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{
                                         borderRadius: 10,
-                                        backgroundColor:'#1985DF'
+                                        backgroundColor:'#F64648'
                                         
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
@@ -236,7 +236,7 @@ export default class RegisterScreen extends Component {
     const { item, getLabel } = settings
     return (
       <View style={{
-        backgroundColor:'rgba(51, 52, 52, 0.99)',
+        backgroundColor:'#1985DF',
         padding:10,borderWidth:1,
         borderBottomColor:'white',
         borderLeftColor:'transparent',

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableOpacity,View,Text,SafeAreaView,Image} from 'react-native';
+import {TouchableOpacity,View,Text,SafeAreaView,StatusBar} from 'react-native';
 import PresentationScreen from './Src/Screens/PresentationScreen';
 import RegisterScreen from './Src/Screens/RegisterScreen';
 import LoginScreen from './Src/Screens/LoginScreen';
@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/FontAwesome5';
+import VerViajeScreen from './Src/Screens/VerViajeScreen';
 
 
 
@@ -22,22 +23,12 @@ const AuthStackNavigator = createStackNavigator({
   },
   Register:{screen:RegisterScreen,
     navigationOptions:{
-      title: 'Volver',
-      headerStyle: {
-        backgroundColor: 'black',
-      },
-      headerTintColor: '#fff',
-      },
-    },
+      header:null
+    }},
   Login:{screen:LoginScreen,
     navigationOptions:{
-      title: 'Volver',
-      headerStyle: {
-        backgroundColor: 'black',
-      },
-      headerTintColor: '#fff',
-      },
-    }
+      header:null
+    }}
  })
 
  const HomeStack = createStackNavigator({
@@ -61,6 +52,26 @@ const AuthStackNavigator = createStackNavigator({
       ),
     })
   },
+  VerViaje:{
+    screen:VerViajeScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+          <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.goBack()}>
+            <View style={{padding:10, flexDirection:'row'}}>
+              <Icon2 name='md-arrow-round-back' size={22} color='white'  />
+            </View>
+          </TouchableOpacity>
+          <View style={{ flex: .75, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+
+          </View>
+          <View style={{ flex: .1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
+
+          </View>
+        </SafeAreaView>
+      ),
+    })
+  }
 
 })
 
@@ -132,29 +143,9 @@ const MyRideStack = createStackNavigator({
           }
         }
       })
-    },
-    Se: {
-      screen: HomeStack, navigationOptions: () => ({
-        tabBarIcon: ({ focused }) => {
-          if (focused == true) {
-            return (
-              <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center' ,}}>
-                <Icon2 name='ios-car' size={22} color='white' />
-              </View>
-            )
-          }
-          else {
-            return (
-              <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center',}}>
-                 <Icon2 name='ios-car' size={22} color='gray' />
-              </View>)
-
-          }
-        }
-      })
-    },
+    }
   },
-  { tabBarOptions: { showLabel: false, activeBackgroundColor: '#1985DF', inactiveTintColor: 'gray', activeTintColor: '#FA5F5A', style: { backgroundColor: 'white' } } },
+  { tabBarOptions: { showLabel: false, activeBackgroundColor: '#F64648', inactiveTintColor: 'gray', style: { backgroundColor: 'white' } } },
   { initialRouteName: 'Home' },
 )
 
@@ -201,6 +192,15 @@ const ContainerApp = createAppContainer(SwitchApp);
 
 
 
-export default ContainerApp;
+export default class App extends Component {
+
+  render() {
+    return (
+        <View style={{flex:1, marginTop: StatusBar.currentHeight }}>
+          <ContainerApp />
+        </View>
+    )
+  }
+};
 
 
