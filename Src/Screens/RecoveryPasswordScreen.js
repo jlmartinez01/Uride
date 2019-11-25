@@ -25,9 +25,6 @@ export default class RecoveryPasswordScreen extends Component {
         <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
         <ScrollView>
           <View style={{padding:30}}>
-                  <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                          <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
-                  </Display>
                   <View style={{flex:.5,justifyContent:'center',alignItems:'center',marginBottom:30}}>
                       <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:200, width:200}} resizeMode="contain"/>
                   </View>
@@ -46,16 +43,16 @@ export default class RecoveryPasswordScreen extends Component {
                   </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
                                 <Button
-                                    title={'Enviar Link'}
+                                    title={'Hecho'}
                                     rounded
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{
                                         borderRadius: 10,
-                                        backgroundColor:'#1985DF'
+                                        backgroundColor:'#F64648'
                                         
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                                    onPress={() => this.props.navigation.navigate('App')}
+                                    onPress={() => this.props.navigation.navigate('Presentation')}
                                 />
                   </View>
           </View>

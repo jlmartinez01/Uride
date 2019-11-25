@@ -58,7 +58,7 @@ export default class LoginScreen extends Component {
                             secureTextEntry={true}
                           />
                   </View>
-                  <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
+                  <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
                                     title={'Iniciar sesión'}
                                     rounded
@@ -72,19 +72,10 @@ export default class LoginScreen extends Component {
                                     onPress={() => this.props.navigation.navigate('App')}
                                 />
                   </View>
-                  <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
-                                <Button
-                                    title={'Olvidaste tu Contraseña?'}
-                                    rounded
-                                    titleStyle={{fontSize:14,color:'#fff'}}
-                                    buttonStyle={{
-                                        borderRadius: 10,
-                                        backgroundColor:'#1985DF'
-                                        
-                                    }}
-                                    containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                                    onPress={() => this.props.navigation.navigate('Recovery')}
-                                />
+                  <View style={{flexDirection:'row',justifyContent:'center',marginTop:20}}>
+                        <TouchableOpacity style={{padding:10}} onPress={()=>{this.props.navigation.navigate('Recovery')}}>
+                            <Text style={{color:'black'}}>{'¿Olvidaste tu contraseña?'}</Text>
+                        </TouchableOpacity>
                   </View>
           </View>
         </ScrollView>
