@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/FontAwesome5';
 import VerViajeScreen from './Src/Screens/VerViajeScreen';
-
+import RecoveryPasswordScreen from './Src/Screens/RecoveryPasswordScreen'
 
 
 const AuthStackNavigator = createStackNavigator({
@@ -28,7 +28,11 @@ const AuthStackNavigator = createStackNavigator({
   Login:{screen:LoginScreen,
     navigationOptions:{
       header:null
-    }}
+    }},
+  Recovery:{screen:RecoveryPasswordScreen,
+    navigationOptions:{
+      header:null
+    }},
  })
 
  const HomeStack = createStackNavigator({

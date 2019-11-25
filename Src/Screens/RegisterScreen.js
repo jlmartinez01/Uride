@@ -101,6 +101,7 @@ export default class RegisterScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            secureTextEntry={true}
                           />
                   </View>
                   <View style={{marginVertical:10}}>
