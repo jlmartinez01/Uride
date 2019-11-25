@@ -24,15 +24,15 @@ export default class HelpScreen extends Component {
   render() {
 
     return (
-      
-                    <View style={{justifyContent:'center',alignItems:'center',alignContent:'center',marginVertical:10,height:300,marginTop:220}}>
+      <View style={{flex:1}}>
+                    <View style={{flex:1,justifyContent:'center',alignItems:'center',alignContent:'center',marginVertical:10}}>
                         <Text style={{fontWeight: 'bold', fontSize:30}}>{'Email de Contacto'}</Text>
                         <Text style={{fontSize:30}}> {'ayuda@uride.com'} </Text>
                         <Text>{' '}</Text>
                         <Text style={{fontWeight: 'bold', fontSize:30}}>{'Derechos Reservados'}</Text>
                     </View>
                 
-      
+      </View>
       )
   }
 }

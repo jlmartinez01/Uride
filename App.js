@@ -14,6 +14,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import Icon3 from 'react-native-vector-icons/FontAwesome5';
 import VerViajeScreen from './Src/Screens/VerViajeScreen';
 import RecoveryPasswordScreen from './Src/Screens/RecoveryPasswordScreen'
+import HelpScreen from './Src/Screens/HelpScreen';
 
 
 const AuthStackNavigator = createStackNavigator({
@@ -75,7 +76,7 @@ const AuthStackNavigator = createStackNavigator({
         </SafeAreaView>
       ),
     })
-  }
+  },
 
 })
 
@@ -160,6 +161,27 @@ const MyRideStack = createStackNavigator({
       header:null
     }
   },
+  
+  Help:{
+    screen:HelpScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+          <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.goBack()}>
+            <View style={{padding:10, flexDirection:'row'}}>
+              <Icon2 name='md-arrow-round-back' size={22} color='white'  />
+            </View>
+          </TouchableOpacity>
+          <View style={{ flex: .75, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+
+          </View>
+          <View style={{ flex: .1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
+
+          </View>
+        </SafeAreaView>
+      ),
+    })
+  }
 
 })
 
@@ -173,9 +195,11 @@ const AppDrawerNavigator = createDrawerNavigator({
       <View style={{justifyContent:'flex-end',padding:15}}>
         <Text style={{color:'black'}}>{'Editar información'}</Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate('Help')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
         <Text style={{color:'black'}}>{'Ayuda'}</Text>
       </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Presentation')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
         <Text style={{color:'black'}}>{'Cerrar sesión'}</Text>
