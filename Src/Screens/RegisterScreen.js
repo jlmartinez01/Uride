@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
+import {StyleSheet,Text, View,ActivityIndicator,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
@@ -10,6 +10,9 @@ import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
 import { CustomPicker } from 'react-native-custom-picker'
+import * as firebase from 'firebase'
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 
 const itemUser =[
@@ -23,9 +26,27 @@ export default class RegisterScreen extends Component {
   constructor(){
     super();
     this.state={
+      isloading:false,
       typeUser:'pasajero',
       enablePassengerText:true,
       enableDriverText:false,
+
+
+      usu_id:'',
+      usu_id_rol:'',
+
+      usu_nombre:"",
+      usu_apellidos:"",
+      usu_correo:"",
+      usu_contrasena:"",
+      usu_imagen:"",
+      usu_destino:"",
+      usu_hora:"",
+      usu_id_viaje:"",
+      usu_punto_encuentro:"",
+      usu_auto:"",
+      usu_color_auto:"",
+      usu_auto_asientos:""
 
     }
   }
@@ -50,17 +71,122 @@ export default class RegisterScreen extends Component {
       })
     }
   }
+
+  _registerConductor(){
+    
+    if(this.state.usu_nombre!=""&&
+        this.state.usu_apellidos!=""&&
+        this.state.usu_correo!=""&&
+        this.state.usu_contrasena!=""&&
+        this.state.usu_destino!=""&&
+        this.state.usu_hora!=""&&
+        this.state.usu_punto_encuentro!=""&&
+        this.state.usu_auto!=""&&
+        this.state.usu_color_auto!=""&&
+        this.state.usu_auto_asientos!="")
+    {
+        this.setState({
+          isloading:true
+        })
+          firebase.auth().createUserWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
+          .then((message)=>{
+            firebase.database().ref('users/'+message.user.uid).set({
+              usu_nombre:this.state.usu_nombre,
+              usu_id_rol:2,
+              usu_apellidos:this.state.usu_apellidos,
+              usu_correo:this.state.usu_correo,
+              usu_imagen:this.state.usu_imagen,
+              usu_destino:this.state.usu_destino,
+              usu_hora:this.state.usu_hora,
+              usu_id_viaje:this.state.usu_id_viaje,
+              usu_punto_encuentro:this.state.usu_punto_encuentro,
+              usu_auto:this.state.usu_auto,
+              usu_color_auto:this.state.usu_color_auto,
+              usu_auto_asientos:this.state.usu_auto_asientos,
+              })
+              this.setState({
+                isloading:false
+              })
+          })
+          .catch((error)=>{
+            this.refs.toast.show(error.message,DURATION.LENGTH_LONG);
+            this.setState({
+              isloading:false
+            })
+          })
+    }else
+    {
+      this.refs.toast.show('Los campos no pueden quedar vacíos',DURATION.LENGTH_LONG);
+    }
+    
+  }
+
+
+  _registerPasajero(){
+    
+    if(this.state.usu_nombre!=""&&
+        this.state.usu_apellidos!=""&&
+        this.state.usu_correo!=""&&
+        this.state.usu_contrasena!="")
+    {
+        this.setState({
+          isloading:true
+        })
+          firebase.auth().createUserWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
+          .then((message)=>{
+            firebase.database().ref('users/'+message.user.uid).set({
+              usu_nombre:this.state.usu_nombre,
+              usu_id_rol:1,
+              usu_apellidos:this.state.usu_apellidos,
+              usu_correo:this.state.usu_correo,
+              usu_imagen:this.state.usu_imagen,
+              usu_destino:this.state.usu_destino,
+              usu_hora:this.state.usu_hora,
+              usu_id_viaje:this.state.usu_id_viaje,
+              usu_punto_encuentro:this.state.usu_punto_encuentro,
+              usu_auto:this.state.usu_auto,
+              usu_color_auto:this.state.usu_color_auto,
+              usu_auto_asientos:this.state.usu_auto_asientos,
+              })
+              this.setState({
+                isloading:false
+              })
+
+              this.props.navigation.navigate('App')
+          })
+          .catch((error)=>{
+            this.refs.toast.show(error.message,DURATION.LENGTH_LONG);
+            this.setState({
+              isloading:false
+            })
+          })
+    }else
+    {
+      this.refs.toast.show('Los campos no pueden quedar vacíos',DURATION.LENGTH_LONG);
+    }
+    
+  }
   
   render() {
 
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
+      <Spinner
+                visible={this.state.isloading}
+                color='#F64648' />
+      <Toast
+                ref="toast"
+                style={{backgroundColor:'black'}}
+                position='bottom'
+                positionValue={200}
+                fadeInDuration={750}
+                fadeOutDuration={1000}
+                opacity={0.8}
+                textStyle={{color:'white'}}
+            />
       <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
       <ScrollView>
         <View style={{padding:30}}>
-                <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                        <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
-                </Display>
                 <View style={{flex:.3,justifyContent:'center',alignItems:'center',marginBottom:30}}>
                     <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
                 </View>
@@ -88,6 +214,11 @@ export default class RegisterScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_correo:text
+                              })
+                            }}
                           />
                   </View>
                    <View style={{marginVertical:10}}>
@@ -102,6 +233,11 @@ export default class RegisterScreen extends Component {
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
                             secureTextEntry={true}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_contrasena:text
+                              })
+                            }}
                           />
                   </View>
                   <View style={{marginVertical:10}}>
@@ -115,6 +251,11 @@ export default class RegisterScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_nombre:text
+                              })
+                            }}
                           />
                   </View>
                   <View style={{marginVertical:10}}>
@@ -128,63 +269,93 @@ export default class RegisterScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_apellidos:text
+                              })
+                            }}
                           />
                   </View>
-
-                  <Display enable={this.state.enableDriverText}>
-                  <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Automóvil'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={MaterialCommunityIcons}
-                            iconName={'car'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                          />
+                  {
+                  this.state.enableDriverText
+                  ?
+                  <View>
+                        <View style={{marginVertical:10}}>
+                                <Fumi
+                                  label={'Automóvil'}
+                                  labelStyle={{color:'#fff'}}
+                                  iconClass={MaterialCommunityIcons}
+                                  iconName={'car'}
+                                  iconColor={'#fff'}
+                                  iconSize={20}
+                                  iconWidth={40}
+                                  inputPadding={16}
+                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                                  onChangeText={(text)=>{
+                                    this.setState({
+                                      usu_auto:text
+                                    })
+                                  }}
+                                />
+                        </View>
+                        <View style={{marginVertical:10}}>
+                                <Fumi
+                                  label={'Color de automóvil'}
+                                  labelStyle={{color:'#fff'}}
+                                  iconClass={MaterialIcons}
+                                  iconName={'color-lens'}
+                                  iconColor={'#fff'}
+                                  iconSize={20}
+                                  iconWidth={40}
+                                  inputPadding={16}
+                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                                  onChangeText={(text)=>{
+                                    this.setState({
+                                      usu_color_auto:text
+                                    })
+                                  }}
+                                />
+                        </View>
+                        <View style={{marginVertical:10}}>
+                                <Fumi
+                                  label={'Hora de salida'}
+                                  labelStyle={{color:'#fff'}}
+                                  iconClass={MaterialCommunityIcons}
+                                  iconName={'clock'}
+                                  iconColor={'#fff'}
+                                  iconSize={20}
+                                  iconWidth={40}
+                                  inputPadding={16}
+                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                                  onChangeText={(text)=>{
+                                    this.setState({
+                                      usu_hora:text
+                                    })
+                                  }}
+                                />
+                        </View>
+                        <View style={{marginVertical:10}}>
+                                <Fumi
+                                  label={'Número de asientos'}
+                                  labelStyle={{color:'#fff'}}
+                                  iconClass={MaterialCommunityIcons}
+                                  iconName={'seat-recline-extra'}
+                                  iconColor={'#fff'}
+                                  iconSize={20}
+                                  iconWidth={40}
+                                  inputPadding={16}
+                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                                  onChangeText={(text)=>{
+                                    this.setState({
+                                      usu_auto_asientos:text
+                                    })
+                                  }}
+                                />
+                        </View>
                   </View>
-                  <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Color de automóvil'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={MaterialIcons}
-                            iconName={'color-lens'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                          />
-                  </View>
-                  <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Hora de salida'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={MaterialCommunityIcons}
-                            iconName={'clock'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                          />
-                  </View>
-                  <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Número de asientos'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={MaterialCommunityIcons}
-                            iconName={'seat-recline-extra'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                          />
-                  </View>
-                  </Display>
+                  :
+                  <View/>
+                  }
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
                                     title={'Registrarse'}
@@ -196,7 +367,14 @@ export default class RegisterScreen extends Component {
                                         
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                                    onPress={() => this.props.navigation.navigate('App')}
+                                    onPress={() =>{ 
+                                      if(this.state.typeUser=='pasajero'){
+                                      this._registerPasajero()
+                                      }
+                                      else{
+                                        this._registerConductor()
+                                      }
+                                    }}
                                 />
                   </View>
         </View>

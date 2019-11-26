@@ -6,7 +6,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
-
+import * as firebase from 'firebase'
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 
 export default class LoginScreen extends Component {
@@ -14,14 +16,48 @@ export default class LoginScreen extends Component {
   constructor(){
     super();
     this.state={
-
+      isloading:false,
+      usu_correo:'',
+      usu_contrasena:''
     }
+  }
+
+  _login(){
+    this.setState({
+      isloading:true
+    })
+    firebase.auth().signInWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
+    .then((message)=>{
+      this.setState({
+        isloading:false
+      })
+      this.props.navigation.navigate('App')
+    })
+    .catch((error)=>{
+      this.refs.toast.show(error.message,DURATION.LENGTH_LONG);
+      this.setState({
+        isloading:false
+      })
+    })
   }
   
   render() {
 
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
+        <Spinner
+                visible={this.state.isloading}
+                color='#F64648' />
+        <Toast
+                ref="toast"
+                style={{backgroundColor:'black'}}
+                position='bottom'
+                positionValue={200}
+                fadeInDuration={750}
+                fadeOutDuration={1000}
+                opacity={0.8}
+                textStyle={{color:'white'}}
+            />
         <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
         <ScrollView>
           <View style={{padding:30}}>
@@ -42,6 +78,11 @@ export default class LoginScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_correo:text
+                              })
+                            }}
                           />
                   </View>
                    <View style={{marginVertical:10}}>
@@ -56,6 +97,11 @@ export default class LoginScreen extends Component {
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
                             secureTextEntry={true}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_contrasena:text
+                              })
+                            }}
                           />
                   </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
@@ -69,7 +115,7 @@ export default class LoginScreen extends Component {
                                         
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                                    onPress={() => this.props.navigation.navigate('App')}
+                                    onPress={() => this._login()}
                                 />
                   </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:20}}>

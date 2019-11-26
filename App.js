@@ -15,6 +15,8 @@ import Icon3 from 'react-native-vector-icons/FontAwesome5';
 import VerViajeScreen from './Src/Screens/VerViajeScreen';
 import RecoveryPasswordScreen from './Src/Screens/RecoveryPasswordScreen'
 import HelpScreen from './Src/Screens/HelpScreen';
+import * as firebase from 'firebase'
+import {firebaseConfig} from './Src/Constants/ApiKeys'
 
 
 const AuthStackNavigator = createStackNavigator({
@@ -222,7 +224,13 @@ const ContainerApp = createAppContainer(SwitchApp);
 
 export default class App extends Component {
 
+  componentDidMount()
+  {
+    firebase.initializeApp(firebaseConfig)
+  }
+
   render() {
+
     return (
         <View style={{flex:1, marginTop: StatusBar.currentHeight }}>
           <ContainerApp />
