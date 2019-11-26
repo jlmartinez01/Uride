@@ -107,6 +107,7 @@ export default class RegisterScreen extends Component {
               this.setState({
                 isloading:false
               })
+              this.props.navigation.navigate('App')
           })
           .catch((error)=>{
             this.refs.toast.show(error.message,DURATION.LENGTH_LONG);
