@@ -21,14 +21,14 @@ const itemUser =[
 ]
 
 
-export default class RegisterScreen extends Component {
+export default class EditInformation extends Component {
 
   constructor(){
     super();
     this.state={
       isloading:false,
       typeUser:'pasajero',
-      enablePassengerText:true,
+      enablePassengerText:false,
       enableDriverText:false,
 
 
@@ -51,26 +51,49 @@ export default class RegisterScreen extends Component {
     }
   }
 
-  DisplayViews = (value) => 
+
+  componentDidMount()
   {
-    this.setState({
-      typeUser:value
-    })
-    if(value=='pasajero')
-    {
-      this.setState({
-        enablePassengerText:true,
-        enableDriverText:false,
-      })
-    }
-    if(value=='conductor')
-    {
-      this.setState({
-        enablePassengerText:false,
-        enableDriverText:true,
-      })
-    }
+    this._loadUsuInformation()
   }
+
+   
+  _loadUsuInformation = async () => {
+    try {
+      let usu_informacion = await AsyncStorage.getItem('usu_informacion')
+      let parsed = JSON.parse(usu_informacion)
+      this.setState({
+        usu_id: parsed.usu_id,
+        usu_id_rol: parsed.usu_id_rol
+      })
+
+      firebase.database().ref('users/'+parsed.usu_id).on('value', (res) => {
+        this.setState({
+          isloading:false,
+          usu_nombre:res.usu_nombre,
+          usu_apellidos:res.usu_apellidos,
+          usu_imagen:res.usu_imagen,
+          usu_destino:res.usu_destino,
+          usu_hora:res.usu_hora,
+          usu_id_viaje:res.usu_id_viaje,
+          usu_punto_encuentro:res.usu_punto_encuentro,
+          usu_auto:res.usu_auto,
+          usu_color_auto:res.usu_color_auto,
+          usu_auto_asientos:res.usu_auto_asientos
+        })
+    
+        })
+
+      
+
+    } catch (error) {
+      // Error retrieving data
+      // console.warn(error);
+    }
+
+  }
+
+  
 
   _registerConductor(){
     
@@ -199,32 +222,6 @@ export default class RegisterScreen extends Component {
     
   }
 
-  
-validateCorreo = (text) => {
-  let reg = /^1[2-8]0[0-9][0-9][0-9](@upslp.edu.mx)/;
-  if (reg.test(text) === false) {
-    setTimeout(() => {
-    Alert.alert(
-      'Ingresa una cuenta institucional valida',
-      '',
-      [
-          { text: 'Aceptar',style:'cancel'},
-      ],
-      { cancelable: true }
-    )},100)
-  }
-  else {
-     
-    if(this.state.typeUser=='pasajero'){
-      this._registerPasajero()
-      }
-      else{
-        this._registerConductor()
-      }
-  }
-}
- 
-  
   render() {
 
     return (
@@ -245,59 +242,6 @@ validateCorreo = (text) => {
       <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
       <ScrollView>
         <View style={{padding:30}}>
-                <View style={{flex:.3,justifyContent:'center',alignItems:'center',marginBottom:30}}>
-                    <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
-                </View>
-                <View style={{marginVertical:10}}>
-                                    <Text style={{color:'gray'}}>Tipo de usuario</Text>
-                                    <CustomPicker
-                                      defaultValue={itemUser[0]}
-                                      options={itemUser}
-                                      getLabel={item => item.label}
-                                      fieldTemplate={this.renderFieldUser}
-                                      optionTemplate={this.renderOption}
-                                      onValueChange={value => {
-                                        this.DisplayViews(value.value)
-                                      }}
-                                    />
-                      </View>
-                <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Correo institucional'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={FontAwesomeIcon}
-                            iconName={'university'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                            onChangeText={(text)=>{
-                              this.setState({
-                                usu_correo:text
-                              })
-                            }}
-                          />
-                  </View>
-                   <View style={{marginVertical:10}}>
-                          <Fumi
-                            label={'Contraseña'}
-                            labelStyle={{color:'#fff'}}
-                            iconClass={MaterialCommunityIcons}
-                            iconName={'security'}
-                            iconColor={'#fff'}
-                            iconSize={20}
-                            iconWidth={40}
-                            inputPadding={16}
-                            style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                            secureTextEntry={true}
-                            onChangeText={(text)=>{
-                              this.setState({
-                                usu_contrasena:text
-                              })
-                            }}
-                          />
-                  </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
                             label={'Nombre'}
@@ -314,6 +258,7 @@ validateCorreo = (text) => {
                                 usu_nombre:text
                               })
                             }}
+                            value={this.state.usu_nombre}
                           />
                   </View>
                   <View style={{marginVertical:10}}>
@@ -332,10 +277,11 @@ validateCorreo = (text) => {
                                 usu_apellidos:text
                               })
                             }}
+                            value={this.state.usu_apellidos}
                           />
                   </View>
                   {
-                  this.state.enableDriverText
+                  this.state.usu_id_rol==2
                   ?
                   <View>
                         <View style={{marginVertical:10}}>

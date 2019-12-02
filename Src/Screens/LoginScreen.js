@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
+import {Text, View,AsyncStorage,Image,ImageBackground,Alert,TouchableOpacity,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,12 +9,12 @@ import Display from 'react-native-display';
 import * as firebase from 'firebase'
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast, {DURATION} from 'react-native-easy-toast'
+import { withNavigationFocus } from 'react-navigation';
 
+class LoginScreen extends Component {
 
-export default class LoginScreen extends Component {
-
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state={
       isloading:false,
       usu_correo:'',
@@ -28,13 +28,31 @@ export default class LoginScreen extends Component {
     })
     firebase.auth().signInWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
     .then((message)=>{
-      this.setState({
-        isloading:false
+      
+      firebase.database().ref('users/'+message.user.uid).on('value', (res) => {
+        this.setState({
+          isloading:false
+        })
+        let informacion={
+          usu_id:message.user.uid,
+          usu_id_rol:res.val().usu_id_rol
+        }
+        AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
+
+        console.warn(informacion.usu_id_rol)
+        this.props.navigation.navigate('Home',{usu_id_rol_global:informacion.usu_id_rol})
       })
-      this.props.navigation.navigate('App')
     })
     .catch((error)=>{
-      this.refs.toast.show(error.message,DURATION.LENGTH_LONG);
+      setTimeout(() => {
+        Alert.alert(
+          error.message,
+          '',
+          [
+              { text: 'Aceptar',style:'cancel'},
+          ],
+          { cancelable: true }
+        )},100)
       this.setState({
         isloading:false
       })
@@ -130,3 +148,5 @@ export default class LoginScreen extends Component {
       )
   }
 }
+
+export default withNavigationFocus(LoginScreen)

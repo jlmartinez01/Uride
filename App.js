@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableOpacity,View,Text,SafeAreaView,StatusBar} from 'react-native';
+import {TouchableOpacity,View,Text,SafeAreaView,StatusBar,AsyncStorage} from 'react-native';
 import PresentationScreen from './Src/Screens/PresentationScreen';
 import RegisterScreen from './Src/Screens/RegisterScreen';
 import LoginScreen from './Src/Screens/LoginScreen';
@@ -17,6 +17,9 @@ import RecoveryPasswordScreen from './Src/Screens/RecoveryPasswordScreen'
 import HelpScreen from './Src/Screens/HelpScreen';
 import * as firebase from 'firebase'
 import {firebaseConfig} from './Src/Constants/ApiKeys'
+import SplashScreen from './Src/Components/SplashScreen'
+import ButtonsHamburguesa from './Src/Components/ButtonsHamburguesa'
+import EditInformation from './Src/Screens/EditInformation'
 
 
 const AuthStackNavigator = createStackNavigator({
@@ -183,6 +186,25 @@ const MyRideStack = createStackNavigator({
         </SafeAreaView>
       ),
     })
+  },
+  EditInformation:{
+    screen:EditInformation,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+          <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.goBack()}>
+            <View style={{padding:10, flexDirection:'row'}}>
+              <Icon2 name='md-arrow-round-back' size={22} color='white'  />
+            </View>
+          </TouchableOpacity>
+          <View style={{ flex: .85, flexDirection: 'row' }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Text style={{ color: 'white' }}>Editar Información</Text>
+            </View>
+          </View>
+        </SafeAreaView>
+      ),
+    })
   }
 
 })
@@ -193,26 +215,13 @@ const AppDrawerNavigator = createDrawerNavigator({
 }, {
   drawerBackgroundColor: 'white',
   contentComponent: ({ navigation }) => (
-    <SafeAreaView>
-      <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{'Editar información'}</Text>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate('Help')}>
-      <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{'Ayuda'}</Text>
-      </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Presentation')}>
-      <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{'Cerrar sesión'}</Text>
-      </View>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <ButtonsHamburguesa/>
   ),
 }
 )
 
 const SwitchApp  = createSwitchNavigator({
+  Splash: SplashScreen,
   Auth:AuthStackNavigator,
   App:AppDrawerNavigator,
 })
@@ -220,15 +229,7 @@ const SwitchApp  = createSwitchNavigator({
 const ContainerApp = createAppContainer(SwitchApp);
 
 
-
-
 export default class App extends Component {
-
-  componentDidMount()
-  {
-    firebase.initializeApp(firebaseConfig)
-  }
-
   render() {
 
     return (

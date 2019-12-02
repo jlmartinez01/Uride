@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView, FlatList} from 'react-native';
+import {Text, View,AsyncStorage,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView, FlatList} from 'react-native';
 import { Button } from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,9 +13,15 @@ import { SearchBar } from 'react-native-elements';
 
 export default class HomeScreen extends Component {
 
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state={
+
+      busqueda:"",
+
+      usu_id:'',
+      usu_id_rol:'',
+      usu_id_rol_global:this.props.navigation.getParam('usu_id_rol_global'),
 
       rides:[
         {
@@ -117,13 +123,33 @@ export default class HomeScreen extends Component {
           usu_hora:"20:00"
         },
       ],
-      busqueda:"",
-
-      
-
     }
 
     this.arrayHolder=this.state.rides
+  }
+
+  componentDidMount()
+  {
+    this._loadUsuInformation()
+  }
+
+  
+  _loadUsuInformation = async () => {
+    try {
+      let usu_informacion = await AsyncStorage.getItem('usu_informacion')
+      let parsed = JSON.parse(usu_informacion)
+      this.setState({
+        usu_id: parsed.usu_id,
+        usu_id_rol: parsed.usu_id_rol
+      })
+
+      
+
+    } catch (error) {
+      // Error retrieving data
+      // console.warn(error);
+    }
+
   }
 
   
@@ -146,11 +172,16 @@ export default class HomeScreen extends Component {
   
   render() {
 
+    console.warn(this.state.usu_id_rol_global)
+
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
         <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
                 <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
         </Display>
+        {
+          this.state.usu_id_rol_global==1
+          ?
           <View style={{flex:1}}>
             <SearchBar
               placeholder={'Buscar'}
@@ -201,6 +232,43 @@ export default class HomeScreen extends Component {
             />
 
           </View>
+          :
+          <View style={{flex:1,backgroundColor:'#fff'}}>
+          <View style={{padding:30,justifyContent:'center',alignItems:'center'}}>
+            <View style={{height:100, width:100,marginBottom:20}}>
+                <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
+            </View>
+            <Text style={{color:'gray',marginBottom:3}}>{'Conductor'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_nombre+" "+this.usu_apellidos}</Text>
+            <Text style={{color:'gray',marginBottom:3}}>{'Matrícula'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_correo}</Text>
+            <Text style={{color:'gray',marginBottom:3}}>{'Punto de encuentro'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_punto_encuentro}</Text>
+            <Text style={{color:'gray',marginBottom:3}}>{'Destino'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_destino}</Text>
+            <Text style={{color:'gray',marginBottom:3}}>{'Vehículo'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_auto}</Text>
+            <Text style={{color:'gray',marginBottom:3}}>{'Color'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_color_auto}</Text>
+            <Text style={{color:'gray',marginBottom:3}}>{'Hora de salida'}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.usu_hora}</Text>
+            <View style={{flexDirection:'row',justifyContent:'center',marginTop:5}}>
+                          <Button
+                              title={'Solicitar ride'}
+                              rounded
+                              titleStyle={{fontSize:14,color:'#fff'}}
+                              buttonStyle={{
+                                  borderRadius: 10,
+                                  backgroundColor:'#F64648'
+                                  
+                              }}
+                              containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
+                              onPress={() => this.props.navigation.navigate('App')}
+                          />
+            </View>
+        </View>
+          </View>
+        }
       </View>
       )
   }

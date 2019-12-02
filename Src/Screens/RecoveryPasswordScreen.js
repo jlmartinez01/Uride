@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
+import {Text, View,Alert,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {  Fumi } from 'react-native-textinput-effects';
 import * as Progress from 'react-native-progress';
 import Display from 'react-native-display';
-
+import * as firebase from 'firebase'
 
 
 export default class RecoveryPasswordScreen extends Component {
@@ -14,8 +14,37 @@ export default class RecoveryPasswordScreen extends Component {
   constructor(){
     super();
     this.state={
+      usu_correo:''
 
     }
+  }
+
+
+  forgotPassword = (email) => {
+    firebase.auth().sendPasswordResetEmail(email)
+      .then((message)=>{
+        setTimeout(() => {
+        Alert.alert(
+          'Por favor verifica tu correo electrónico',
+          '',
+          [
+              { text: 'Aceptar',style:'cancel'},
+          ],
+          { cancelable: true }
+        )},100)
+        this.props.navigation.navigate('Login')
+      })
+      .catch((error)=>{
+        setTimeout(() => {
+          Alert.alert(
+            error.message,
+            '',
+            [
+                { text: 'Aceptar',style:'cancel'},
+            ],
+            { cancelable: true }
+          )},100)
+      })
   }
   
   render() {
@@ -39,6 +68,11 @@ export default class RecoveryPasswordScreen extends Component {
                             iconWidth={40}
                             inputPadding={16}
                             style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
+                            onChangeText={(text)=>{
+                              this.setState({
+                                usu_correo:text
+                              })
+                            }}
                           />
                   </View>
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:70}}>
@@ -52,7 +86,7 @@ export default class RecoveryPasswordScreen extends Component {
                                         
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                                    onPress={() => this.props.navigation.navigate('Presentation')}
+                                    onPress={() => this.forgotPassword(this.state.usu_correo)}
                                 />
                   </View>
           </View>
