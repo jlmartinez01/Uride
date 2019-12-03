@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Alert, AsyncStorage, Image, StatusBar } from 'react-native';
 import * as firebase from 'firebase'
-
+import { AppLoading } from 'expo';
 
 class SplashScreen extends Component {
 
@@ -44,9 +44,9 @@ class SplashScreen extends Component {
       let usu_informacion = await AsyncStorage.getItem('usu_informacion')
       let parsed = JSON.parse(usu_informacion)
       let id = parsed.usu_id;
-      let usu_id_rol_global = parsed.usu_id_rol
+      let usu_id_rol_global = parsed.usu_id_rol_global
 
-      console.warn(id)
+      
       if (id != '') {
         this.props.navigation.navigate('Home',{usu_id_rol_global:usu_id_rol_global})
       }

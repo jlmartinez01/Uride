@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View,AsyncStorage,Image,ImageBackground,Alert,TouchableOpacity,ScrollView} from 'react-native';
+import {Text, View,AsyncStorage,Image,ImageBackground,Alert,TouchableOpacity,Platform} from 'react-native';
 import { Button } from 'react-native-elements';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,6 +10,8 @@ import * as firebase from 'firebase'
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { withNavigationFocus } from 'react-navigation';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 class LoginScreen extends Component {
 
@@ -29,7 +31,7 @@ class LoginScreen extends Component {
     firebase.auth().signInWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
     .then((message)=>{
       
-      firebase.database().ref('users/'+message.user.uid).on('value', (res) => {
+      firebase.database().ref('users/'+message.user.uid).once('value', (res) => {
         this.setState({
           isloading:false
         })
@@ -39,7 +41,7 @@ class LoginScreen extends Component {
         }
         AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
 
-        console.warn(informacion.usu_id_rol)
+        
         this.props.navigation.navigate('Home',{usu_id_rol_global:informacion.usu_id_rol})
       })
     })
@@ -77,7 +79,11 @@ class LoginScreen extends Component {
                 textStyle={{color:'white'}}
             />
         <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
-        <ScrollView>
+          <KeyboardAwareScrollView 
+          enableOnAndroid
+          enableAutomaticScroll
+          keyboardOpeningTime={0}
+          extraHeight={Platform.select({ android: 200 })}>
           <View style={{padding:30}}>
                   <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
                           <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
@@ -142,7 +148,8 @@ class LoginScreen extends Component {
                         </TouchableOpacity>
                   </View>
           </View>
-        </ScrollView>
+          
+          </KeyboardAwareScrollView>
         </ImageBackground>
       </View>
       )

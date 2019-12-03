@@ -23,6 +23,23 @@ export default class HomeScreen extends Component {
       usu_id_rol:'',
       usu_id_rol_global:this.props.navigation.getParam('usu_id_rol_global'),
 
+      isloading:false,
+      typeUser:'',
+      enablePassengerText:false,
+      enableDriverText:false,
+      usu_nombre:"",
+      usu_apellidos:"",
+      usu_correo:"",
+      usu_contrasena:"",
+      usu_imagen:"",
+      usu_destino:"",
+      usu_hora:"",
+      usu_id_viaje:"",
+      usu_punto_encuentro:"",
+      usu_auto:"",
+      usu_color_auto:"",
+      usu_auto_asientos:"",
+
       rides:[
         {
           usu_id:'1',
@@ -140,14 +157,34 @@ export default class HomeScreen extends Component {
       let parsed = JSON.parse(usu_informacion)
       this.setState({
         usu_id: parsed.usu_id,
-        usu_id_rol: parsed.usu_id_rol
+        usu_id_rol: parsed.usu_id_rol,
+        usu_id_rol_global:parsed.usu_id_rol,
+      })
+
+      firebase.database().ref('users/'+parsed.usu_id).on('value', (res) => {
+        
+        this.setState({
+          isloading:false,
+          usu_nombre:res.val().usu_nombre,
+          usu_apellidos:res.val().usu_apellidos,
+          usu_imagen:res.val().usu_imagen,
+          usu_destino:res.val().usu_destino,
+          usu_hora:res.val().usu_hora,
+          usu_id_viaje:res.val().usu_id_viaje,
+          usu_punto_encuentro:res.val().usu_punto_encuentro,
+          usu_auto:res.val().usu_auto,
+          usu_color_auto:res.val().usu_color_auto,
+          usu_auto_asientos:res.val().usu_auto_asientos,
+          isloading:false,
+          typeUser:parsed.usu_id_rol==1?'Pasajero':'Conductor'
+        })
       })
 
       
 
     } catch (error) {
-      // Error retrieving data
-      // console.warn(error);
+      
+      console.warn(error);
     }
 
   }
@@ -172,7 +209,7 @@ export default class HomeScreen extends Component {
   
   render() {
 
-    console.warn(this.state.usu_id_rol_global)
+    console.warn(this.state.usu_nombre)
 
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
@@ -239,32 +276,20 @@ export default class HomeScreen extends Component {
                 <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
             </View>
             <Text style={{color:'gray',marginBottom:3}}>{'Conductor'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_nombre+" "+this.usu_apellidos}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_nombre+" "+this.state.usu_apellidos}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Matrícula'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_correo}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_correo}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Punto de encuentro'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_punto_encuentro}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_punto_encuentro}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Destino'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_destino}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_destino}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Vehículo'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_auto}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_auto}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Color'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_color_auto}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_color_auto}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Hora de salida'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.usu_hora}</Text>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_hora}</Text>
             <View style={{flexDirection:'row',justifyContent:'center',marginTop:5}}>
-                          <Button
-                              title={'Solicitar ride'}
-                              rounded
-                              titleStyle={{fontSize:14,color:'#fff'}}
-                              buttonStyle={{
-                                  borderRadius: 10,
-                                  backgroundColor:'#F64648'
-                                  
-                              }}
-                              containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                              onPress={() => this.props.navigation.navigate('App')}
-                          />
             </View>
         </View>
           </View>

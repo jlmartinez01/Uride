@@ -27,7 +27,7 @@ export default class EditInformation extends Component {
     super();
     this.state={
       isloading:false,
-      typeUser:'pasajero',
+      typeUser:'',
       enablePassengerText:false,
       enableDriverText:false,
 
@@ -59,6 +59,9 @@ export default class EditInformation extends Component {
 
    
   _loadUsuInformation = async () => {
+    this.setState({
+      isloading:true
+    })
     try {
       let usu_informacion = await AsyncStorage.getItem('usu_informacion')
       let parsed = JSON.parse(usu_informacion)
@@ -70,16 +73,18 @@ export default class EditInformation extends Component {
       firebase.database().ref('users/'+parsed.usu_id).on('value', (res) => {
         this.setState({
           isloading:false,
-          usu_nombre:res.usu_nombre,
-          usu_apellidos:res.usu_apellidos,
-          usu_imagen:res.usu_imagen,
-          usu_destino:res.usu_destino,
-          usu_hora:res.usu_hora,
-          usu_id_viaje:res.usu_id_viaje,
-          usu_punto_encuentro:res.usu_punto_encuentro,
-          usu_auto:res.usu_auto,
-          usu_color_auto:res.usu_color_auto,
-          usu_auto_asientos:res.usu_auto_asientos
+          usu_nombre:res.val().usu_nombre,
+          usu_apellidos:res.val().usu_apellidos,
+          usu_imagen:res.val().usu_imagen,
+          usu_destino:res.val().usu_destino,
+          usu_hora:res.val().usu_hora,
+          usu_id_viaje:res.val().usu_id_viaje,
+          usu_punto_encuentro:res.val().usu_punto_encuentro,
+          usu_auto:res.val().usu_auto,
+          usu_color_auto:res.val().usu_color_auto,
+          usu_auto_asientos:res.val().usu_auto_asientos,
+          isloading:false,
+          typeUser:parsed.usu_id_rol==1?'Pasajero':'Conductor'
         })
     
         })
@@ -88,19 +93,20 @@ export default class EditInformation extends Component {
 
     } catch (error) {
       // Error retrieving data
-      // console.warn(error);
+      console.warn(error);
     }
 
   }
 
   
 
-  _registerConductor(){
+  _updateConductor(){
     
+    this.setState({
+      isloading:true
+    })
     if(this.state.usu_nombre!=""&&
         this.state.usu_apellidos!=""&&
-        this.state.usu_correo!=""&&
-        this.state.usu_contrasena!=""&&
         this.state.usu_destino!=""&&
         this.state.usu_hora!=""&&
         this.state.usu_punto_encuentro!=""&&
@@ -108,36 +114,26 @@ export default class EditInformation extends Component {
         this.state.usu_color_auto!=""&&
         this.state.usu_auto_asientos!="")
     {
-        this.setState({
-          isloading:true
-        })
-          firebase.auth().createUserWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
+        firebase.database().ref('users/'+this.state.usu_id).set({
+          usu_nombre:this.state.usu_nombre,
+          usu_id_rol:1,
+          usu_apellidos:this.state.usu_apellidos,
+          usu_correo:this.state.usu_correo,
+          usu_imagen:this.state.usu_imagen,
+          usu_destino:this.state.usu_destino,
+          usu_hora:this.state.usu_hora,
+          usu_id_viaje:this.state.usu_id_viaje,
+          usu_punto_encuentro:this.state.usu_punto_encuentro,
+          usu_auto:this.state.usu_auto,
+          usu_color_auto:this.state.usu_color_auto,
+          usu_auto_asientos:this.state.usu_auto_asientos,
+          })
           .then((message)=>{
-            firebase.database().ref('users/'+message.user.uid).set({
-              usu_nombre:this.state.usu_nombre,
-              usu_id_rol:2,
-              usu_apellidos:this.state.usu_apellidos,
-              usu_correo:this.state.usu_correo,
-              usu_imagen:this.state.usu_imagen,
-              usu_destino:this.state.usu_destino,
-              usu_hora:this.state.usu_hora,
-              usu_id_viaje:this.state.usu_id_viaje,
-              usu_punto_encuentro:this.state.usu_punto_encuentro,
-              usu_auto:this.state.usu_auto,
-              usu_color_auto:this.state.usu_color_auto,
-              usu_auto_asientos:this.state.usu_auto_asientos,
-              })
-              this.setState({
-                isloading:false
-              })
-              let informacion={
-                usu_id:message.user.uid,
-                usu_id_rol:2
-              }
-              AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
-      
-              console.warn(informacion.usu_id_rol)
-              this.props.navigation.navigate('Home',{usu_id_rol_global:2})
+          this.setState({
+            isloading:false
+          })
+          this.props.navigation.navigate('Home')
+
           })
           .catch((error)=>{
             setTimeout(() => {
@@ -161,19 +157,15 @@ export default class EditInformation extends Component {
   }
 
 
-  _registerPasajero(){
+  _updatePasajero(){
     
+    this.setState({
+      isloading:true
+    })
     if(this.state.usu_nombre!=""&&
-        this.state.usu_apellidos!=""&&
-        this.state.usu_correo!=""&&
-        this.state.usu_contrasena!="")
+        this.state.usu_apellidos!="")
     {
-        this.setState({
-          isloading:true
-        })
-          firebase.auth().createUserWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
-          .then((message)=>{
-            firebase.database().ref('users/'+message.user.uid).set({
+              firebase.database().ref('users/'+this.state.usu_id).set({
               usu_nombre:this.state.usu_nombre,
               usu_id_rol:1,
               usu_apellidos:this.state.usu_apellidos,
@@ -187,34 +179,28 @@ export default class EditInformation extends Component {
               usu_color_auto:this.state.usu_color_auto,
               usu_auto_asientos:this.state.usu_auto_asientos,
               })
+              .then((message)=>{
               this.setState({
                 isloading:false
               })
+              this.refs.toast.show('Información actualizada',DURATION.LENGTH_LONG);
+              this.props.navigation.navigate('Home')
 
-              let informacion={
-                usu_id:message.user.uid,
-                usu_id_rol:1
-              }
-              AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
-      
-              console.warn(informacion.usu_id_rol)
-              this.props.navigation.navigate('Home',{usu_id_rol_global:1})
-
-          })
-          .catch((error)=>{
-            setTimeout(() => {
-              Alert.alert(
-                error.message,
-                '',
-                [
-                    { text: 'Aceptar',style:'cancel'},
-                ],
-                { cancelable: true }
-              )},100)
-            this.setState({
-              isloading:false
-            })
-          })
+              })
+              .catch((error)=>{
+                setTimeout(() => {
+                  Alert.alert(
+                    error.message,
+                    '',
+                    [
+                        { text: 'Aceptar',style:'cancel'},
+                    ],
+                    { cancelable: true }
+                  )},100)
+                this.setState({
+                  isloading:false
+                })
+              })
     }else
     {
       this.refs.toast.show('Los campos no pueden quedar vacíos',DURATION.LENGTH_LONG);
@@ -242,6 +228,9 @@ export default class EditInformation extends Component {
       <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
       <ScrollView>
         <View style={{padding:30}}>
+                  <View style={{height:100, width:100,marginBottom:20}}>
+                      <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
+                  </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
                             label={'Nombre'}
@@ -300,6 +289,7 @@ export default class EditInformation extends Component {
                                       usu_auto:text
                                     })
                                   }}
+                                  value={this.state.usu_auto}
                                 />
                         </View>
                         <View style={{marginVertical:10}}>
@@ -318,6 +308,7 @@ export default class EditInformation extends Component {
                                       usu_color_auto:text
                                     })
                                   }}
+                                  value={this.state.usu_color_auto}
                                 />
                         </View>
                         <View style={{marginVertical:10}}>
@@ -336,6 +327,7 @@ export default class EditInformation extends Component {
                                       usu_hora:text
                                     })
                                   }}
+                                  value={this.state.usu_hora}
                                 />
                         </View>
                         <View style={{marginVertical:10}}>
@@ -354,6 +346,7 @@ export default class EditInformation extends Component {
                                       usu_auto_asientos:text
                                     })
                                   }}
+                                  value={this.state.usu_auto_asientos}
                                 />
                         </View>
                         <View style={{marginVertical:10}}>
@@ -372,6 +365,7 @@ export default class EditInformation extends Component {
                                       usu_punto_encuentro:text
                                     })
                                   }}
+                                  value={this.state.usu_punto_encuentro}
                                 />
                         </View>
                         <View style={{marginVertical:10}}>
@@ -390,6 +384,7 @@ export default class EditInformation extends Component {
                                       usu_destino:text
                                     })
                                   }}
+                                  value={this.state.usu_destino}
                                 />
                         </View>
                   </View>
@@ -398,7 +393,7 @@ export default class EditInformation extends Component {
                   }
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
-                                    title={'Registrarse'}
+                                    title={'Actualizar'}
                                     rounded
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{
@@ -408,7 +403,12 @@ export default class EditInformation extends Component {
                                     }}
                                     containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
                                     onPress={() =>{ 
-                                      this.validateCorreo(this.state.usu_correo)
+                                      if(this.state.typeUser=='pasajero'){
+                                        this._updatePasajero()
+                                        }
+                                        else{
+                                          this._updateConductor()
+                                        }
                                     }}
                                 />
                   </View>

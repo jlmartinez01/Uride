@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,Text, View,Alert,Image,ImageBackground,AsyncStorage,TouchableOpacity,ScrollView} from 'react-native';
+import {StyleSheet,Text, View,Alert,Image,ImageBackground,AsyncStorage,Platform,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
@@ -13,7 +13,7 @@ import { CustomPicker } from 'react-native-custom-picker'
 import * as firebase from 'firebase'
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast, {DURATION} from 'react-native-easy-toast'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const itemUser =[
   {label: 'Pasajero', value: 'pasajero'},
@@ -205,7 +205,7 @@ validateCorreo = (text) => {
   if (reg.test(text) === false) {
     setTimeout(() => {
     Alert.alert(
-      'Ingresa una cuenta institucional valida',
+      'Ingresa una cuenta institucional válida',
       '',
       [
           { text: 'Aceptar',style:'cancel'},
@@ -243,7 +243,11 @@ validateCorreo = (text) => {
                 textStyle={{color:'white'}}
             />
       <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
-      <ScrollView>
+      <KeyboardAwareScrollView 
+          enableOnAndroid
+          enableAutomaticScroll
+          keyboardOpeningTime={0}
+          extraHeight={Platform.select({ android: 200 })}>
         <View style={{padding:30}}>
                 <View style={{flex:.3,justifyContent:'center',alignItems:'center',marginBottom:30}}>
                     <Image source={require('../Images/Uride_logo.png')}style={{flex:1, height:100, width:100}} resizeMode="contain"/>
@@ -467,7 +471,7 @@ validateCorreo = (text) => {
                                 />
                   </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
       </ImageBackground>
     </View>
       )
@@ -504,7 +508,7 @@ validateCorreo = (text) => {
     const { item, getLabel } = settings
     return (
       <View style={{
-        backgroundColor:'#1985DF',
+        backgroundColor:'#F64648',
         padding:10,borderWidth:1,
         borderBottomColor:'white',
         borderLeftColor:'transparent',
