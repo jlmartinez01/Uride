@@ -9,7 +9,9 @@ import Display from 'react-native-display';
 import RideBox from '../Components/RideBox'
 import { PinchGestureHandler } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
-
+import * as firebase from 'firebase'
+import Spinner from 'react-native-loading-spinner-overlay';
+import Icon from 'react-native-vector-icons/Entypo';
 
 export default class HomeScreen extends Component {
 
@@ -19,8 +21,6 @@ export default class HomeScreen extends Component {
 
       busqueda:"",
 
-      usu_id:'',
-      usu_id_rol:'',
       usu_id_rol_global:this.props.navigation.getParam('usu_id_rol_global'),
 
       isloading:false,
@@ -34,115 +34,20 @@ export default class HomeScreen extends Component {
       usu_imagen:"",
       usu_destino:"",
       usu_hora:"",
-      usu_id_viaje:"",
+      usu_id_ride:"",
       usu_punto_encuentro:"",
       usu_auto:"",
       usu_color_auto:"",
       usu_auto_asientos:"",
-
-      rides:[
-        {
-          usu_id:'1',
-          usu_nombre:"Rogelio",
-          usu_apellidos:"Pineda Sánchez",
-          usu_matricula:"140460",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"https://gpluseurope.com/wp-content/uploads/Mauro-profile-picture.jpg",
-          usu_destino:"Dalias",
-          usu_id_viaje:'56',
-          usu_punto_encuentro:"Edificio ASA",
-          usu_auto:"Volkswagen Sedan",
-          usu_color_auto:'rojo',
-          usu_hora:"20:00"
-        },
-        {
-          usu_id:'2',
-          usu_nombre:"Estefanía",
-          usu_apellidos:"Silva Orozco",
-          usu_matricula:"160460",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"https://static.makeuseof.com/wp-content/uploads/2015/11/perfect-profile-picture-all-about-face.jpg",
-          usu_destino:"Industrias",
-          usu_id_viaje:'53',
-          usu_punto_encuentro:"Servicios escolares",
-          usu_auto:"Bugatti Veyron",
-          usu_color_auto:'naranja',
-          usu_hora:"17:00"
-        },
-        {
-          usu_id:'3',
-          usu_nombre:"Imelda",
-          usu_apellidos:"Melisa Rainerio",
-          usu_matricula:"150560",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"https://images.freeimages.com/images/large-previews/71b/pittsburgh-5-1217930.jpg",
-          usu_destino:"Eucaliptos Campestre",
-          usu_id_viaje:'58',
-          usu_punto_encuentro:"Plaza fumadores 1",
-          usu_auto:"Dodge Viper",
-          usu_color_auto:'Azul',
-          usu_hora:"18:00"
-        },
-        {
-          usu_id:'4',
-          usu_nombre:"Victorino",
-          usu_apellidos:"Salvador Jenaro",
-          usu_matricula:"150760",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"http://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-101-e1485815933252.jpg",
-          usu_destino:"El paseo",
-          usu_id_viaje:'48',
-          usu_punto_encuentro:"Cafetería",
-          usu_auto:"Shelby Cobra",
-          usu_color_auto:'Azul',
-          usu_hora:"20:00"
-        },
-        {
-          usu_id:'5',
-          usu_nombre:"Florina",
-          usu_apellidos:"Martínez Sánchez",
-          usu_matricula:"160560",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg",
-          usu_destino:"Valle dorado",
-          usu_id_viaje:'38',
-          usu_punto_encuentro:"Edificio ASA",
-          usu_auto:"Ferrari Testarrosa",
-          usu_color_auto:'Amarillo',
-          usu_hora:"20:00"
-        },
-        {
-          usu_id:'6',
-          usu_nombre:"Lázaro",
-          usu_apellidos:"Pineda Sánchez",
-          usu_matricula:"160260",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"http://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-116.jpg",
-          usu_destino:"Pedregal",
-          usu_id_viaje:'64',
-          usu_punto_encuentro:"Edificio ASA",
-          usu_auto:"Ford Mustang",
-          usu_color_auto:'Negro',
-          usu_hora:"20:00"
-        },
-        {
-          usu_id:'7',
-          usu_nombre:"Lázaro",
-          usu_apellidos:"Pineda Sánchez",
-          usu_matricula:"140460",
-          usu_correo:'140645@upslp.edu.mx',
-          usu_imagen:"https://static.makeuseof.com/wp-content/uploads/2015/11/perfect-profile-picture-all-about-face.jpg",
-          usu_destino:"Foviste",
-          usu_id_viaje:'74',
-          usu_punto_encuentro:"Servicios escolares",
-          usu_auto:"Ford Mustang",
-          usu_color_auto:'Negro',
-          usu_hora:"20:00"
-        },
-      ],
+      usu_matricula:'',
+      rides:[],
+      arrayHolder:[]
     }
 
-    this.arrayHolder=this.state.rides
+    this.usu_id='',
+    this.usu_id_rol='',
+
+    this.state.rides
   }
 
   componentDidMount()
@@ -152,39 +57,99 @@ export default class HomeScreen extends Component {
 
   
   _loadUsuInformation = async () => {
+    this.setState({
+      isloading:true
+    })
     try {
       let usu_informacion = await AsyncStorage.getItem('usu_informacion')
       let parsed = JSON.parse(usu_informacion)
+      this.usu_id= parsed.usu_id,
+      this.usu_id_rol= parsed.usu_id_rol,
       this.setState({
-        usu_id: parsed.usu_id,
-        usu_id_rol: parsed.usu_id_rol,
-        usu_id_rol_global:parsed.usu_id_rol,
+        usu_id_rol_global:parsed.usu_id_rol
       })
 
+      
+
+      if(this.usu_id_rol==1)
+      {
+        firebase.database().ref('/rides').on('value',(snapshot) =>{
+          var returnArray = [];
+      
+              snapshot.forEach((snap)=>{
+                  var item = snap.val();
+                  item.key = snap.key;
+          
+                  returnArray.push({
+                    usu_nombre:snap.val().usu_nombre,
+                    usu_apellidos:snap.val().usu_apellidos,
+                    usu_destino:snap.val().usu_destino,
+                    usu_hora:snap.val().usu_hora,
+                    usu_id_ride:snap.key,
+                    usu_punto_encuentro:snap.val().usu_punto_encuentro,
+                    usu_auto:snap.val().usu_auto,
+                    usu_color_auto:snap.val().usu_color_auto,
+                    usu_auto_asientos:snap.val().usu_auto_asientos,
+                    usu_matricula:snap.val().usu_matricula,
+                    usu_ride_activo:snap.val().usu_ride_activo,
+                  });
+
+                  let finalArray = returnArray.filter(item=>item.usu_ride_activo==true)
+
+                  
+          
+                  this.setState({ 
+                    rides: finalArray ,
+                    arrayHolder:finalArray
+                  })
+              });
+
+
+
+          });
+
+      }
+
       firebase.database().ref('users/'+parsed.usu_id).on('value', (res) => {
-        
         this.setState({
-          isloading:false,
-          usu_nombre:res.val().usu_nombre,
-          usu_apellidos:res.val().usu_apellidos,
-          usu_imagen:res.val().usu_imagen,
-          usu_destino:res.val().usu_destino,
-          usu_hora:res.val().usu_hora,
-          usu_id_viaje:res.val().usu_id_viaje,
-          usu_punto_encuentro:res.val().usu_punto_encuentro,
-          usu_auto:res.val().usu_auto,
-          usu_color_auto:res.val().usu_color_auto,
-          usu_auto_asientos:res.val().usu_auto_asientos,
-          isloading:false,
-          typeUser:parsed.usu_id_rol==1?'Pasajero':'Conductor'
+          typeUser:parsed.usu_id_rol==1?'Pasajero':'Conductor',
+          usu_id_ride:res.val().usu_id_ride,
         })
+
+          
+          if(this.usu_id_rol==2)
+          {
+                firebase.database().ref('rides/'+res.val().usu_id_ride).on('value', (snapshot) => {
+                  this.setState({
+                    usu_nombre:snapshot.val().usu_nombre,
+                    usu_apellidos:snapshot.val().usu_apellidos,
+                    usu_matricula:snapshot.val().usu_matricula,
+                    usu_destino:snapshot.val().usu_destino,
+                    usu_hora:snapshot.val().usu_hora,
+                    usu_punto_encuentro:snapshot.val().usu_punto_encuentro,
+                    usu_auto:snapshot.val().usu_auto,
+                    usu_color_auto:snapshot.val().usu_color_auto,
+                    usu_auto_asientos:snapshot.val().usu_auto_asientos,
+                    usu_ride_activo:snapshot.val().usu_ride_activo==false?'inactivo':'activo',
+                    isloading:false,
+                  })
+                })
+                
+          }
+          this.setState({
+            isloading:false
+          })
       })
+      
 
       
 
     } catch (error) {
       
       console.warn(error);
+      this.setState({
+        isloading:false
+      })
     }
 
   }
@@ -193,7 +158,7 @@ export default class HomeScreen extends Component {
 
   searchFilterFunction = text => {  
         
-    const newData = this.arrayHolder.filter(item => {     
+    const newData = this.state.arrayHolder.filter(item => {     
         const itemData = `
         ${item.usu_nombre.toUpperCase()}   
         ${item.usu_apellidos.toUpperCase()}
@@ -209,13 +174,11 @@ export default class HomeScreen extends Component {
   
   render() {
 
-    console.warn(this.state.usu_nombre)
-
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
-        <Display enable={this.state.isloading} style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
-                <Progress.Circle size={30} indeterminate={true} animated={true} color='#F64648'/>
-        </Display>
+        <Spinner
+                visible={this.state.isloading}
+                color='#F64648' />
         {
           this.state.usu_id_rol_global==1
           ?
@@ -243,16 +206,15 @@ export default class HomeScreen extends Component {
                 usu_apellidos={item.usu_apellidos}
                 usu_matricula={item.usu_matricula}
                 usu_correo={item.usu_correo}
-                usu_imagen={item.usu_imagen}
                 usu_destino={item.usu_destino}
                 usu_hora={item.usu_hora}
-                usu_id_viaje={item.usu_id_viaje}
+                usu_id_ride={item.usu_id_ride}
                 usu_punto_encuentro={item.usu_punto_encuentro}
                 usu_auto={item.usu_auto}
                 usu_color_auto={item.usu_color_auto}/>
               )}
               }
-              keyExtractor={(item) => item.usu_id}
+              keyExtractor={(item) => item.usu_id_ride}
 
               ListEmptyComponent={() => {
                 return (
@@ -270,31 +232,55 @@ export default class HomeScreen extends Component {
 
           </View>
           :
+          this.state.usu_id_rol_global==2
+          ?
           <View style={{flex:1,backgroundColor:'#fff'}}>
-          <View style={{padding:30,justifyContent:'center',alignItems:'center'}}>
-            <View style={{height:100, width:100,marginBottom:20}}>
-                <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
+            <View style={{padding:30,justifyContent:'center',alignItems:'center'}}>
+              <View>
+              {
+                this.state.usu_imagen!=""
+                ?
+                <View style={{height:100, width:100,marginBottom:20}}>
+                  <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
+                </View>
+                :
+                <Icon name='user' size={100} color='gray'/>
+              }
             </View>
             <Text style={{color:'gray',marginBottom:3}}>{'Conductor'}</Text>
             <Text style={{color:'black',marginBottom:3}}>{this.state.usu_nombre+" "+this.state.usu_apellidos}</Text>
             <Text style={{color:'gray',marginBottom:3}}>{'Matrícula'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_correo}</Text>
-            <Text style={{color:'gray',marginBottom:3}}>{'Punto de encuentro'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_punto_encuentro}</Text>
-            <Text style={{color:'gray',marginBottom:3}}>{'Destino'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_destino}</Text>
-            <Text style={{color:'gray',marginBottom:3}}>{'Vehículo'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_auto}</Text>
-            <Text style={{color:'gray',marginBottom:3}}>{'Color'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_color_auto}</Text>
-            <Text style={{color:'gray',marginBottom:3}}>{'Hora de salida'}</Text>
-            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_hora}</Text>
-            <View style={{flexDirection:'row',justifyContent:'center',marginTop:5}}>
-            </View>
+            <Text style={{color:'black',marginBottom:3}}>{this.state.usu_matricula}</Text>
+            {
+              this.state.usu_auto!=''
+              ?
+              <View style={{justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{color:'gray',marginBottom:3}}>{'Punto de encuentro'}</Text>
+                    <Text style={{color:'black',marginBottom:3}}>{this.state.usu_punto_encuentro}</Text>
+                    <Text style={{color:'gray',marginBottom:3}}>{'Destino'}</Text>
+                    <Text style={{color:'black',marginBottom:3}}>{this.state.usu_destino}</Text>
+                    <Text style={{color:'gray',marginBottom:3}}>{'Vehículo'}</Text>
+                    <Text style={{color:'black',marginBottom:3}}>{this.state.usu_auto}</Text>
+                    <Text style={{color:'gray',marginBottom:3}}>{'Color'}</Text>
+                    <Text style={{color:'black',marginBottom:3}}>{this.state.usu_color_auto}</Text>
+                    <Text style={{color:'gray',marginBottom:3}}>{'Hora de salida'}</Text>
+                    <Text style={{color:'black',marginBottom:3}}>{this.state.usu_hora}</Text>
+                    <Text style={{color:'gray',marginBottom:3}}>{'Estatus'}</Text>
+                    <Text style={{color:'black',marginBottom:3}}>{this.state.usu_ride_activo}</Text>
+              </View>
+              :
+              <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditRideInformation')}>
+              <View style={{justifyContent:'center',alignItems:'center',marginTop:30,backgroundColor:'#F64648',padding:20}}>
+                  <Text style={{color:'white',marginBottom:3}}>{'Aún no haz configurado tu ride'}</Text>
+              </View>
+              </TouchableOpacity>
+            }
         </View>
-          </View>
-        }
       </View>
-      )
+      :
+      <View/>
+      }
+    </View>
+    )
   }
 }

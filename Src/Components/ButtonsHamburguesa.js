@@ -10,6 +10,8 @@ class ButtonsHamburguesa extends Component {
     super(props)
     this.state = {
     }
+    this.usu_id=''
+    this.usu_id_rol=''
   }
 
   clearData = async () => {
@@ -33,8 +35,8 @@ class ButtonsHamburguesa extends Component {
     try {
       let usu_informacion = await AsyncStorage.getItem('usu_informacion')
       let parsed = JSON.parse(usu_informacion)
-      let usu_id = parsed.usu_id;
-      let usu_id_rol = parsed.usu_id_rol
+      this.usu_id = parsed.usu_id;
+      this.usu_id_rol = parsed.usu_id_rol
 
 
     } catch (error) {
@@ -52,9 +54,20 @@ class ButtonsHamburguesa extends Component {
         <SafeAreaView>
       <TouchableOpacity onPress={() => this.props.navigation.navigate('EditInformation')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
-        <Text style={{color:'black'}}>{'Editar información'}</Text>
+        <Text style={{color:'black'}}>{'Editar información de perfil'}</Text>
       </View>
       </TouchableOpacity>
+      {
+        this.usu_id_rol==2
+        ?
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditRideInformation')}>
+        <View style={{justifyContent:'flex-end',padding:15}}>
+          <Text style={{color:'black'}}>{'Editar información de ride'}</Text>
+        </View>
+        </TouchableOpacity>
+        :
+        <View/>
+      }
       <TouchableOpacity onPress={() => this.props.navigation.navigate('Help')}>
       <View style={{justifyContent:'flex-end',padding:15}}>
         <Text style={{color:'black'}}>{'Ayuda'}</Text>

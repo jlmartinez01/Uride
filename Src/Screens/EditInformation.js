@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,Text, View,Alert,Image,ImageBackground,AsyncStorage,TouchableOpacity,ScrollView} from 'react-native';
+import {StyleSheet,Text, View,Alert,Image,ImageBackground,AsyncStorage,Platform,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
@@ -13,7 +13,7 @@ import { CustomPicker } from 'react-native-custom-picker'
 import * as firebase from 'firebase'
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast, {DURATION} from 'react-native-easy-toast'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const itemUser =[
   {label: 'Pasajero', value: 'pasajero'},
@@ -42,7 +42,7 @@ export default class EditInformation extends Component {
       usu_imagen:"",
       usu_destino:"",
       usu_hora:"",
-      usu_id_viaje:"",
+      usu_id_ride:"",
       usu_punto_encuentro:"",
       usu_auto:"",
       usu_color_auto:"",
@@ -76,13 +76,6 @@ export default class EditInformation extends Component {
           usu_nombre:res.val().usu_nombre,
           usu_apellidos:res.val().usu_apellidos,
           usu_imagen:res.val().usu_imagen,
-          usu_destino:res.val().usu_destino,
-          usu_hora:res.val().usu_hora,
-          usu_id_viaje:res.val().usu_id_viaje,
-          usu_punto_encuentro:res.val().usu_punto_encuentro,
-          usu_auto:res.val().usu_auto,
-          usu_color_auto:res.val().usu_color_auto,
-          usu_auto_asientos:res.val().usu_auto_asientos,
           isloading:false,
           typeUser:parsed.usu_id_rol==1?'Pasajero':'Conductor'
         })
@@ -101,38 +94,24 @@ export default class EditInformation extends Component {
   
 
   _updateConductor(){
-    
-    this.setState({
-      isloading:true
-    })
     if(this.state.usu_nombre!=""&&
-        this.state.usu_apellidos!=""&&
-        this.state.usu_destino!=""&&
-        this.state.usu_hora!=""&&
-        this.state.usu_punto_encuentro!=""&&
-        this.state.usu_auto!=""&&
-        this.state.usu_color_auto!=""&&
-        this.state.usu_auto_asientos!="")
+        this.state.usu_apellidos!="")
     {
-        firebase.database().ref('users/'+this.state.usu_id).set({
+      this.setState({
+        isloading:true
+      })
+        firebase.database().ref('users/'+this.state.usu_id).update({
           usu_nombre:this.state.usu_nombre,
-          usu_id_rol:1,
           usu_apellidos:this.state.usu_apellidos,
-          usu_correo:this.state.usu_correo,
           usu_imagen:this.state.usu_imagen,
-          usu_destino:this.state.usu_destino,
-          usu_hora:this.state.usu_hora,
-          usu_id_viaje:this.state.usu_id_viaje,
-          usu_punto_encuentro:this.state.usu_punto_encuentro,
-          usu_auto:this.state.usu_auto,
-          usu_color_auto:this.state.usu_color_auto,
-          usu_auto_asientos:this.state.usu_auto_asientos,
           })
           .then((message)=>{
-          this.setState({
-            isloading:false
-          })
-          this.props.navigation.navigate('Home')
+
+            
+              this.setState({
+                isloading:false
+              })
+              this.props.navigation.navigate('Home')
 
           })
           .catch((error)=>{
@@ -158,33 +137,24 @@ export default class EditInformation extends Component {
 
 
   _updatePasajero(){
-    
-    this.setState({
-      isloading:true
-    })
     if(this.state.usu_nombre!=""&&
         this.state.usu_apellidos!="")
     {
-              firebase.database().ref('users/'+this.state.usu_id).set({
+    this.setState({
+      isloading:true
+    })
+              firebase.database().ref('users/'+this.state.usu_id).update({
               usu_nombre:this.state.usu_nombre,
-              usu_id_rol:1,
               usu_apellidos:this.state.usu_apellidos,
-              usu_correo:this.state.usu_correo,
               usu_imagen:this.state.usu_imagen,
-              usu_destino:this.state.usu_destino,
-              usu_hora:this.state.usu_hora,
-              usu_id_viaje:this.state.usu_id_viaje,
-              usu_punto_encuentro:this.state.usu_punto_encuentro,
-              usu_auto:this.state.usu_auto,
-              usu_color_auto:this.state.usu_color_auto,
-              usu_auto_asientos:this.state.usu_auto_asientos,
               })
               .then((message)=>{
-              this.setState({
-                isloading:false
-              })
-              this.refs.toast.show('Información actualizada',DURATION.LENGTH_LONG);
-              this.props.navigation.navigate('Home')
+
+                    this.setState({
+                      isloading:false
+                    })
+                    this.refs.toast.show('Información actualizada',DURATION.LENGTH_LONG);
+                    this.props.navigation.navigate('Home')
 
               })
               .catch((error)=>{
@@ -226,10 +196,20 @@ export default class EditInformation extends Component {
                 textStyle={{color:'white'}}
             />
       <ImageBackground source={require('../Images/fondo.jpg')} style={{ flex: 1,}}>
-      <ScrollView>
+      <KeyboardAwareScrollView 
+          enableOnAndroid
+          enableAutomaticScroll
+          keyboardOpeningTime={0}
+          extraHeight={Platform.select({ android: 200 })}>
         <View style={{padding:30}}>
                   <View style={{height:100, width:100,marginBottom:20}}>
+                    {
+                      this.state.usu_imagen!=""
+                      ?
                       <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
+                      :
+                      <View/>
+                    }
                   </View>
                   <View style={{marginVertical:10}}>
                           <Fumi
@@ -269,131 +249,9 @@ export default class EditInformation extends Component {
                             value={this.state.usu_apellidos}
                           />
                   </View>
-                  {
-                  this.state.usu_id_rol==2
-                  ?
-                  <View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Automóvil'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'car'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_auto:text
-                                    })
-                                  }}
-                                  value={this.state.usu_auto}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Color de automóvil'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialIcons}
-                                  iconName={'color-lens'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_color_auto:text
-                                    })
-                                  }}
-                                  value={this.state.usu_color_auto}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Hora de salida'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'clock'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_hora:text
-                                    })
-                                  }}
-                                  value={this.state.usu_hora}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Número de asientos'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'seat-recline-extra'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_auto_asientos:text
-                                    })
-                                  }}
-                                  value={this.state.usu_auto_asientos}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Punto de encuentro'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'map-marker'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_punto_encuentro:text
-                                    })
-                                  }}
-                                  value={this.state.usu_punto_encuentro}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Destino'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'pine-tree'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_destino:text
-                                    })
-                                  }}
-                                  value={this.state.usu_destino}
-                                />
-                        </View>
-                  </View>
-                  :
-                  <View/>
-                  }
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
-                                    title={'Actualizar'}
+                                    title={'Guardar'}
                                     rounded
                                     titleStyle={{fontSize:14,color:'#fff'}}
                                     buttonStyle={{
@@ -413,7 +271,7 @@ export default class EditInformation extends Component {
                                 />
                   </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
       </ImageBackground>
     </View>
       )

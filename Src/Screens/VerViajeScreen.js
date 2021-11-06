@@ -1,16 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet,Text, View,TextInput,Image,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
+import {StyleSheet,Text, View,AsyncStorage,Alert,ImageBackground,Dimensions,TouchableOpacity,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/MaterialIcons'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import {  Fumi } from 'react-native-textinput-effects';
-import * as Progress from 'react-native-progress';
-import Display from 'react-native-display';
-import { CustomPicker } from 'react-native-custom-picker'
-
+import Icon3 from 'react-native-vector-icons/Entypo'
+import * as firebase from 'firebase'
 
 const itemUser =[
   {label: 'Pasajero', value: 'pasajero'},
@@ -23,15 +15,104 @@ export default class VerViajeScreen extends Component {
   constructor(props){
     super(props);
     this.state=this.props.navigation.getParam('state')
+    this.state.viaje_solicitado=false
+    this.usu_id=''
+    this.usu_i_rol=''
+  }
+
+  componentDidMount()
+  {
+    this._loadUsuInformation()
+  }
+   
+  _loadUsuInformation = async () => {
+    this.setState({
+      isloading:true
+    })
+    try {
+      let usu_informacion = await AsyncStorage.getItem('usu_informacion')
+      let parsed = JSON.parse(usu_informacion)
+      this.usu_id= parsed.usu_id,
+      this.usu_id_rol= parsed.usu_id_rol
+
+      firebase.database().ref('solicitudes_viaje').on('value', (snapshot)=>{
+        if(snapshot.val()!=null)
+        {
+          firebase.database().ref('solicitudes_viaje/'+this.state.usu_id_ride+'/'+this.usu_id).on('value', (snap)=>{
+            if(snap.val()!=null)
+            {
+              this.setState({
+                viaje_solicitado:true
+              })
+            }
+          })
+        }
+      })
+
+
+    } catch (error) {
+      // Error retrieving data
+      console.warn(error);
+    }
+
+  }
+
+  
+
+  _hacerSolicitud(){
+
+    firebase.database().ref('solicitudes_viaje').once('value', (snapshot)=>{
+      if(snapshot.val()==null)
+      {
+        firebase.database().ref('solicitudes_viaje/'+this.state.usu_id_ride).set({
+          [this.usu_id]:true
+        })
+      }
+      else{
+        firebase.database().ref('solicitudes_viaje/'+this.state.usu_id_ride+'/'+this.usu_id).once('value', (snap)=>{
+          if(snap.val()==null)
+          {
+            firebase.database().ref('solicitudes_viaje/'+this.state.usu_id_ride).update({
+              [this.usu_id]:true
+            })
+          }
+          else
+          {
+            firebase.database().ref('solicitudes_viaje/'+this.state.usu_id_ride+'/'+this.usu_id).remove()
+            this.setState({
+              viaje_solicitado:false
+            })
+
+            firebase.database().ref('pasajeros_viaje/').on('value', (snapshot2)=>{
+              if(snapshot2.val()!=null)
+              {
+                firebase.database().ref('pasajeros_viaje/'+this.state.usu_id_ride+'/'+this.usu_id).on('value', (snap2)=>{
+                  if(snap2.val()!=null)
+                  {
+                    firebase.database().ref('pasajeros_viaje/'+this.state.usu_id_ride+'/'+this.usu_id).remove()
+                  }
+                })
+              }
+            })
+
+            firebase.database().ref('users/'+this.usu_id).update({
+              usu_id_ride:''
+            })
+          }
+        })
+      }
+    })
   }
 
   render() {
 
     return (
       <View style={{flex:1,backgroundColor:'#fff'}}>
-        <View style={{padding:30,justifyContent:'center',alignItems:'center'}}>
-            <View style={{height:100, width:100,marginBottom:20}}>
-                <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
+        <View style={{padding:20,justifyContent:'center',alignItems:'center'}}>
+            <View style={{padding:20,justifyContent:'center',alignItems:'center'}}>
+                <View>
+                    <Icon3 name='user' size={100} color='gray'/>
+                </View>
             </View>
             <Text style={{color:'gray',marginBottom:3}}>{'Conductor'}</Text>
             <Text style={{color:'black',marginBottom:3}}>{this.state.usu_nombre+" "+this.state.usu_apellidos}</Text>
@@ -49,7 +130,7 @@ export default class VerViajeScreen extends Component {
             <Text style={{color:'black',marginBottom:3}}>{this.state.usu_hora}</Text>
             <View style={{flexDirection:'row',justifyContent:'center',marginTop:5}}>
                           <Button
-                              title={'Solicitar ride'}
+                              title={this.state.viaje_solicitado==true?'Cancelar solicitud':'Solicitar ride'}
                               rounded
                               titleStyle={{fontSize:14,color:'#fff'}}
                               buttonStyle={{
@@ -58,7 +139,9 @@ export default class VerViajeScreen extends Component {
                                   
                               }}
                               containerStyle={{paddingHorizontal:5,paddingVertical:6, borderRadius:4,flex:.7}}
-                              onPress={() => this.props.navigation.navigate('App')}
+                              onPress={() => {
+                                this._hacerSolicitud()
+                              }}
                           />
             </View>
         </View>

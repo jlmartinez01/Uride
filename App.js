@@ -20,6 +20,7 @@ import {firebaseConfig} from './Src/Constants/ApiKeys'
 import SplashScreen from './Src/Components/SplashScreen'
 import ButtonsHamburguesa from './Src/Components/ButtonsHamburguesa'
 import EditInformation from './Src/Screens/EditInformation'
+import EditRideInformation from './Src/Screens/EditRideInformation'
 
 
 const AuthStackNavigator = createStackNavigator({
@@ -52,11 +53,10 @@ const AuthStackNavigator = createStackNavigator({
               <Icon name='menu' size={22} color='white'  />
             </View>
           </TouchableOpacity>
-          <View style={{ flex: .75, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
-
-          </View>
-          <View style={{ flex: .1, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
-
+          <View style={{ flex: .85, flexDirection: 'row' }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Text style={{ color: 'white' }}>Home</Text>
+            </View>
           </View>
         </SafeAreaView>
       ),
@@ -199,13 +199,32 @@ const MyRideStack = createStackNavigator({
           </TouchableOpacity>
           <View style={{ flex: .85, flexDirection: 'row' }}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <Text style={{ color: 'white' }}>Editar Información</Text>
+              <Text style={{ color: 'white' }}>Editar Información de perfil</Text>
             </View>
           </View>
         </SafeAreaView>
       ),
     })
-  }
+  },
+  EditRideInformation:{
+    screen:EditRideInformation,
+    navigationOptions: ({ navigation }) => ({
+      header: (
+        <SafeAreaView style={{ backgroundColor: 'black', flexDirection: 'row', height: 50, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+          <TouchableOpacity style={{flex:.15,justifyContent:'center',alignItems:'center'}} onPress={() => navigation.goBack()}>
+            <View style={{padding:10, flexDirection:'row'}}>
+              <Icon2 name='md-arrow-round-back' size={22} color='white'  />
+            </View>
+          </TouchableOpacity>
+          <View style={{ flex: .85, flexDirection: 'row' }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Text style={{ color: 'white' }}>Editar Información de ride</Text>
+            </View>
+          </View>
+        </SafeAreaView>
+      ),
+    })
+  },
 
 })
 

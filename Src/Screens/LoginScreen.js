@@ -37,7 +37,8 @@ class LoginScreen extends Component {
         })
         let informacion={
           usu_id:message.user.uid,
-          usu_id_rol:res.val().usu_id_rol
+          usu_id_rol:res.val().usu_id_rol,
+          usu_id_ride:res.val().usu_id_ride
         }
         AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
 

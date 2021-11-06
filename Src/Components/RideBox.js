@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import { withNavigationFocus } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Icon3 from 'react-native-vector-icons/Entypo'
 
 class RideBox extends Component{
 
@@ -19,7 +20,7 @@ class RideBox extends Component{
               usu_imagen:props.usu_imagen,
               usu_destino:props.usu_destino,
               usu_hora:props.usu_hora,
-              usu_id_viaje:props.usu_id_viaje,
+              usu_id_ride:props.usu_id_ride,
               usu_punto_encuentro:props.usu_punto_encuentro,
               usu_auto:props.usu_auto,
               usu_color_auto:props.usu_color_auto,
@@ -37,10 +38,10 @@ class RideBox extends Component{
 
         return(
                 <View style={styles.container_caja}>
-                    <View style={{flex:.2, justifyContent:'space-between',marginRight:5}}>
-                        <View style={{height:75,width:75,backgroundColor:'black'}}>
-                            <Image source={{uri:this.state.usu_imagen}} style={{flex:1, height: undefined, width: undefined}}/>
-                        </View>
+                    <View style={{justifyContent:'center',alignItems:'center',flex:.2}}>
+                            <View>
+                                <Icon3 name='user' size={50} color='gray'/>
+                            </View>
                     </View>
                     <View style={{flex:.8,backgroundColor:'#F64648', flexDirection:'row'}}>
                         <View style={{flex:.7,paddingVertical:3,paddingHorizontal:6}}>
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4.65,
 
         elevation: 8,
+        height:80
     }
   });
 

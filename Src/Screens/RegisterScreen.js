@@ -42,7 +42,7 @@ export default class RegisterScreen extends Component {
       usu_imagen:"",
       usu_destino:"",
       usu_hora:"",
-      usu_id_viaje:"",
+      usu_id_ride:"",
       usu_punto_encuentro:"",
       usu_auto:"",
       usu_color_auto:"",
@@ -77,43 +77,52 @@ export default class RegisterScreen extends Component {
     if(this.state.usu_nombre!=""&&
         this.state.usu_apellidos!=""&&
         this.state.usu_correo!=""&&
-        this.state.usu_contrasena!=""&&
-        this.state.usu_destino!=""&&
-        this.state.usu_hora!=""&&
-        this.state.usu_punto_encuentro!=""&&
-        this.state.usu_auto!=""&&
-        this.state.usu_color_auto!=""&&
-        this.state.usu_auto_asientos!="")
+        this.state.usu_contrasena!="")
     {
+        const [matricula, dominio] = this.state.usu_correo.split("@");
         this.setState({
           isloading:true
         })
           firebase.auth().createUserWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
           .then((message)=>{
-            firebase.database().ref('users/'+message.user.uid).set({
-              usu_nombre:this.state.usu_nombre,
-              usu_id_rol:2,
-              usu_apellidos:this.state.usu_apellidos,
-              usu_correo:this.state.usu_correo,
-              usu_imagen:this.state.usu_imagen,
-              usu_destino:this.state.usu_destino,
-              usu_hora:this.state.usu_hora,
-              usu_id_viaje:this.state.usu_id_viaje,
-              usu_punto_encuentro:this.state.usu_punto_encuentro,
-              usu_auto:this.state.usu_auto,
-              usu_color_auto:this.state.usu_color_auto,
-              usu_auto_asientos:this.state.usu_auto_asientos,
+
+              
+
+              firebase.database().ref('users/'+message.user.uid).set({
+                usu_nombre:this.state.usu_nombre,
+                usu_id_rol:2,
+                usu_apellidos:this.state.usu_apellidos,
+                usu_correo:this.state.usu_correo,
+                usu_imagen:this.state.usu_imagen,
+                usu_id_ride:'',
+                usu_matricula:matricula
               })
+
+              let ride_key = firebase.database().ref('rides').push({
+                usu_nombre:this.state.usu_nombre,
+                usu_apellidos:this.state.usu_apellidos,
+                usu_destino:"",
+                usu_hora:"",
+                usu_punto_encuentro:"",
+                usu_auto:"",
+                usu_color_auto:"",
+                usu_auto_asientos:"",
+                usu_matricula:matricula,
+                usu_ride_activo:false
+              }).key
+
+              firebase.database().ref('users/'+message.user.uid).update({ usu_id_ride: ride_key });
+
+
               this.setState({
                 isloading:false
               })
               let informacion={
                 usu_id:message.user.uid,
-                usu_id_rol:2
+                usu_id_rol:2,
+                usu_id_ride: ride_key
               }
               AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
-      
-              console.warn(informacion.usu_id_rol)
               this.props.navigation.navigate('Home',{usu_id_rol_global:2})
           })
           .catch((error)=>{
@@ -145,25 +154,23 @@ export default class RegisterScreen extends Component {
         this.state.usu_correo!=""&&
         this.state.usu_contrasena!="")
     {
+        const [matricula, dominio] = this.state.usu_correo.split("@");
         this.setState({
           isloading:true
         })
           firebase.auth().createUserWithEmailAndPassword(this.state.usu_correo,this.state.usu_contrasena)
           .then((message)=>{
+
             firebase.database().ref('users/'+message.user.uid).set({
               usu_nombre:this.state.usu_nombre,
               usu_id_rol:1,
               usu_apellidos:this.state.usu_apellidos,
               usu_correo:this.state.usu_correo,
               usu_imagen:this.state.usu_imagen,
-              usu_destino:this.state.usu_destino,
-              usu_hora:this.state.usu_hora,
-              usu_id_viaje:this.state.usu_id_viaje,
-              usu_punto_encuentro:this.state.usu_punto_encuentro,
-              usu_auto:this.state.usu_auto,
-              usu_color_auto:this.state.usu_color_auto,
-              usu_auto_asientos:this.state.usu_auto_asientos,
-              })
+              usu_id_ride:'',
+              usu_matricula:matricula
+            })
+
               this.setState({
                 isloading:false
               })
@@ -173,8 +180,6 @@ export default class RegisterScreen extends Component {
                 usu_id_rol:1
               }
               AsyncStorage.setItem('usu_informacion', JSON.stringify(informacion))
-      
-              console.warn(informacion.usu_id_rol)
               this.props.navigation.navigate('Home',{usu_id_rol_global:1})
 
           })
@@ -338,122 +343,6 @@ validateCorreo = (text) => {
                             }}
                           />
                   </View>
-                  {
-                  this.state.enableDriverText
-                  ?
-                  <View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Automóvil'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'car'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_auto:text
-                                    })
-                                  }}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Color de automóvil'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialIcons}
-                                  iconName={'color-lens'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_color_auto:text
-                                    })
-                                  }}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Hora de salida'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'clock'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_hora:text
-                                    })
-                                  }}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Número de asientos'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'seat-recline-extra'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_auto_asientos:text
-                                    })
-                                  }}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Punto de encuentro'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'map-marker'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_punto_encuentro:text
-                                    })
-                                  }}
-                                />
-                        </View>
-                        <View style={{marginVertical:10}}>
-                                <Fumi
-                                  label={'Destino'}
-                                  labelStyle={{color:'#fff'}}
-                                  iconClass={MaterialCommunityIcons}
-                                  iconName={'pine-tree'}
-                                  iconColor={'#fff'}
-                                  iconSize={20}
-                                  iconWidth={40}
-                                  inputPadding={16}
-                                  style={{backgroundColor:'rgba(52, 52, 52, .9)'}}
-                                  onChangeText={(text)=>{
-                                    this.setState({
-                                      usu_destino:text
-                                    })
-                                  }}
-                                />
-                        </View>
-                  </View>
-                  :
-                  <View/>
-                  }
                   <View style={{flexDirection:'row',justifyContent:'center',marginTop:30}}>
                                 <Button
                                     title={'Registrarse'}
